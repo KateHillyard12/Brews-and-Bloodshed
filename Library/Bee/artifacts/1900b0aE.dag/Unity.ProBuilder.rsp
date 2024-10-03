@@ -453,7 +453,6 @@
 "Library/PackageCache/com.unity.probuilder@5.0.7/Runtime/Shapes/Sphere.cs"
 "Library/PackageCache/com.unity.probuilder@5.0.7/Runtime/Shapes/Sprite.cs"
 "Library/PackageCache/com.unity.probuilder@5.0.7/Runtime/Shapes/Stairs.cs"
-"Library/PackageCache/com.unity.probuilder@5.0.7/Runtime/Shapes/Torus.cs"
 -langversion:9.0
 
 /deterministic

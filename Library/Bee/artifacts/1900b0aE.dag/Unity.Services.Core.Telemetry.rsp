@@ -346,7 +346,6 @@
 "Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Cache/FileCachePersister.cs"
 "Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Cache/ICachePersister.cs"
 "Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Diagnotstics/Diagnostics.cs"
-"Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Diagnotstics/DiagnosticsFactory.cs"
 "Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Diagnotstics/DisabledDiagnostics.cs"
 "Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Diagnotstics/DisabledDiagnosticsFactory.cs"
 "Library/PackageCache/com.unity.services.core@1.6.0/Runtime/Telemetry/Handlers/DiagnosticsHandler.cs"
