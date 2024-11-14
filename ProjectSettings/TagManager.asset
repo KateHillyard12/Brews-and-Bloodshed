@@ -13,11 +13,17 @@ TagManager:
   - CollegeGirl
   - JacketMan
   - EspressoMachine
+  - Friendly
+  - Customer
+  - Stacy
+  - Mark
+  - Dave
+  - CooldownUI
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - floorLayer
   - Water
   - UI
   - Player

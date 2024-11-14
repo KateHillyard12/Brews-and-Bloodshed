@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638635832999601312
-    m_Hash: 1144347332
+      ticks: 638650643061984198
+    m_Hash: 2987014775
   m_LockFileStatus:
     m_FilePath: C:/Users/Kate Hillyard/BB/Brews and Bloodshed/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638635832999714917
-    m_Hash: 620511979
+      ticks: 638650643062055187
+    m_Hash: 2754390288
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
@@ -22,12 +22,12 @@ m_LocalPackages:
 m_ProjectPath: C:/Users/Kate Hillyard/BB/Brews and Bloodshed/Packages
 m_EditorVersion: 2021.3.14f1 (eee1884e7226)
 m_ResolvedPackages:
-- packageId: com.unity.collab-proxy@1.17.6
+- packageId: com.unity.collab-proxy@1.17.7
   testable: 0
   isDirectDependency: 1
-  version: 1.17.6
+  version: 1.17.7
   source: 1
-  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.collab-proxy@1.17.6
+  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.collab-proxy@1.17.7
   assetPath: Packages/com.unity.collab-proxy
   name: com.unity.collab-proxy
   displayName: Version Control
@@ -183,13 +183,13 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 0
   isAssetStorePackage: 0
-  datePublishedTicks: 638009928240000000
+  datePublishedTicks: 638036787040000000
   documentationUrl: 
   hasRepository: 1
   repository:
     type: git
     url: https://github.cds.internal.unity3d.com/unity/com.unity.cloud.collaborate.git
-    revision: 3744f24b80468ef1336fbc234c93625c4a6287b0
+    revision: 1641a631fd39029595decb52bdfb641b32ed194c
     path: 
   unityLifecycle:
     version: 1.17.6
@@ -238,7 +238,7 @@ m_ResolvedPackages:
     version: default
   resolvedDependencies:
   - name: com.unity.ide.visualstudio
-    version: 2.0.16
+    version: 2.0.22
   - name: com.unity.test-framework
     version: 1.1.33
   - name: com.unity.ext.nunit
@@ -248,7 +248,7 @@ m_ResolvedPackages:
   - name: com.unity.modules.jsonserialize
     version: 1.0.0
   - name: com.unity.ide.rider
-    version: 3.0.16
+    version: 3.0.31
   - name: com.unity.ide.vscode
     version: 1.2.5
   - name: com.unity.editorcoroutines
@@ -281,12 +281,12 @@ m_ResolvedPackages:
   unityLifecycle:
     version: 1.0.1
     nextVersion: 
-- packageId: com.unity.ide.rider@3.0.16
+- packageId: com.unity.ide.rider@3.0.31
   testable: 0
   isDirectDependency: 1
-  version: 3.0.16
+  version: 3.0.31
   source: 1
-  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.ide.rider@3.0.16
+  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.ide.rider@3.0.31
   assetPath: Packages/com.unity.ide.rider
   name: com.unity.ide.rider
   displayName: JetBrains Rider Editor
@@ -295,7 +295,7 @@ m_ResolvedPackages:
     email: 
     url: 
   category: 
-  type: asset
+  type: assets
   description: The JetBrains Rider Editor package provides an integration for using
     the JetBrains Rider IDE as a code editor for Unity. It adds support for generating
     .csproj files for code completion and auto-discovery of installations.
@@ -377,23 +377,23 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 0
   isAssetStorePackage: 0
-  datePublishedTicks: 638011833630000000
-  documentationUrl: 
+  datePublishedTicks: 638548308080000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.ide.rider@3.0/manual/index.html
   hasRepository: 1
   repository:
     type: git
     url: https://github.cds.internal.unity3d.com/unity/com.unity.ide.rider.git
-    revision: 9b718d58b8f7a34e564f2c79af6d2ca788e929d4
+    revision: ccd778a2275ff09f1a83bc924cfb2fb4d5b63566
     path: 
   unityLifecycle:
     version: 3.0.16
     nextVersion: 
-- packageId: com.unity.ide.visualstudio@2.0.16
+- packageId: com.unity.ide.visualstudio@2.0.22
   testable: 0
   isDirectDependency: 1
-  version: 2.0.16
+  version: 2.0.22
   source: 1
-  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.ide.visualstudio@2.0.16
+  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.ide.visualstudio@2.0.22
   assetPath: Packages/com.unity.ide.visualstudio
   name: com.unity.ide.visualstudio
   displayName: Visual Studio Editor
@@ -402,7 +402,7 @@ m_ResolvedPackages:
     email: 
     url: 
   category: 
-  type: asset
+  type: assets
   description: Code editor integration for supporting Visual Studio as code editor
     for unity. Adds support for generating csproj files for intellisense purposes,
     auto discovery of installations, etc.
@@ -465,13 +465,13 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 0
   isAssetStorePackage: 0
-  datePublishedTicks: 637914298680000000
-  documentationUrl: 
+  datePublishedTicks: 638326061910000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.ide.visualstudio@2.0/manual/index.html
   hasRepository: 1
   repository:
     type: git
     url: https://github.cds.internal.unity3d.com/unity/com.unity.ide.visualstudio.git
-    revision: c01855ef6461b821ab0226135e96a4ee86de96be
+    revision: 700b44077345e97d37d464ff25507638983aed64
     path: 
   unityLifecycle:
     version: 2.0.16
@@ -821,12 +821,12 @@ m_ResolvedPackages:
   unityLifecycle:
     version: 1.1.31
     nextVersion: 
-- packageId: com.unity.textmeshpro@3.0.6
+- packageId: com.unity.textmeshpro@3.0.9
   testable: 0
   isDirectDependency: 1
-  version: 3.0.6
+  version: 3.0.9
   source: 1
-  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.textmeshpro@3.0.6
+  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.textmeshpro@3.0.9
   assetPath: Packages/com.unity.textmeshpro
   name: com.unity.textmeshpro
   displayName: TextMeshPro
@@ -835,7 +835,7 @@ m_ResolvedPackages:
     email: 
     url: 
   category: Text Rendering
-  type: asset
+  type: assets
   description: 'TextMeshPro is the ultimate text solution for Unity. It''s the perfect
     replacement for Unity''s UI Text and the legacy Text Mesh.
 
@@ -997,23 +997,23 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 0
   isAssetStorePackage: 0
-  datePublishedTicks: 637547111200000000
-  documentationUrl: 
+  datePublishedTicks: 638515173480000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0/manual/index.html
   hasRepository: 1
   repository:
     type: git
     url: https://github.cds.internal.unity3d.com/unity/com.unity.textmeshpro.git
-    revision: 01e57e3b7de18af9dfe9baaa0a0ff5cc4765c899
+    revision: 0af193626b4f76795f7cb6c9b0f55389d0e4b1d6
     path: 
   unityLifecycle:
     version: 3.0.6
     nextVersion: 
-- packageId: com.unity.timeline@1.6.4
+- packageId: com.unity.timeline@1.6.5
   testable: 0
   isDirectDependency: 1
-  version: 1.6.4
+  version: 1.6.5
   source: 1
-  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.timeline@1.6.4
+  resolvedPath: C:\Users\Kate Hillyard\BB\Brews and Bloodshed\Library\PackageCache\com.unity.timeline@1.6.5
   assetPath: Packages/com.unity.timeline
   name: com.unity.timeline
   displayName: Timeline
@@ -1170,13 +1170,13 @@ m_ResolvedPackages:
     configSource: 0
   hideInEditor: 0
   isAssetStorePackage: 0
-  datePublishedTicks: 637789039180000000
-  documentationUrl: 
+  datePublishedTicks: 638182037450000000
+  documentationUrl: https://docs.unity3d.com/Packages/com.unity.timeline@1.6/manual/index.html
   hasRepository: 1
   repository:
     type: git
     url: https://github.cds.internal.unity3d.com/unity/com.unity.timeline.git
-    revision: d7e1eb6805737974459309b7d6e7db58635dd167
+    revision: 4ed67a7e62ce940db3d44dc5eca8fade1c664aed
     path: 
   unityLifecycle:
     version: 1.6.4
