@@ -20,6 +20,7 @@ TagManager:
   - Dave
   - CooldownUI
   - NPC
+  - Machine
   layers:
   - Default
   - TransparentFX

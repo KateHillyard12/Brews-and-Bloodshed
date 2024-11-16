@@ -47,13 +47,25 @@ public class MugSnapper : MonoBehaviour
         {
             currentSnapPoint.SnapToPoint(transform);
 
-            if (ingredientColors.TryGetValue(currentSnapPoint.machineType, out Color ingredientColor))
+            if (currentSnapPoint.CompareTag("Machine"))
             {
-                // Add the ingredient and color
-                AddIngredient(currentSnapPoint.machineType.ToString(), ingredientColor);
+                // Machine interaction: add ingredient and update color
+                if (ingredientColors.TryGetValue(currentSnapPoint.machineType, out Color ingredientColor))
+                {
+                    AddIngredient(currentSnapPoint.machineType.ToString(), ingredientColor);
+                }
+            }
+            else if (currentSnapPoint.CompareTag("NPC"))
+            {
+                // NPC interaction: Mug is held permanently
+                Debug.Log("Mug given to NPC. It cannot be retrieved.");
+                currentSnapPoint.isOccupied = true;
+                enabled = false; // Disable the MugSnapper script
             }
         }
     }
+
+
 
     private void AddIngredient(string ingredientName, Color ingredientColor)
     {
@@ -77,4 +89,10 @@ public class MugSnapper : MonoBehaviour
             renderer.material.color = currentColor;
         }
     }
+
+    public List<string> GetIngredients()
+    {
+        return new List<string>(ingredients);
+    }
+
 }

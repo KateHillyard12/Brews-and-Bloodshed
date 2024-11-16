@@ -4,66 +4,110 @@ using UnityEngine;
 
 public class NPCInteractable : MonoBehaviour
 {
-    public GameObject textPrefab;  // The UI Text prefab for chat bubbles
-    public Transform canvasTransform;  // Reference to the Canvas where the text will be displayed
-    public Camera mainCamera;  // Reference to the camera
-    public AudioClip talkingSound;  // The talking sound clip
-    private AudioSource audioSource;  // Reference to the AudioSource component
+    public GameObject textPrefab; // UI Text prefab for chat bubbles
+    public Transform canvasTransform; // Canvas where chat bubbles are displayed
+    public Camera mainCamera; // Reference to the camera
+    public AudioClip talkingSound; // Talking sound
+    private AudioSource audioSource; // Reference to AudioSource
 
-    [SerializeField] private string interactText;
-    [SerializeField] private string[] interactTexts;  // Array of interaction texts
-    private bool isInteracting = false;  // Flag to prevent overlapping dialogue
+    [SerializeField] private List<string> desiredIngredients; // Ingredients NPC expects
+    [SerializeField] private string correctResponse; // Response for correct order
+    [SerializeField] private string incorrectResponse; // Response for incorrect order
+    [SerializeField] private string[] interactTexts; // Interaction texts before receiving a mug
+
+    private bool hasReceivedMug = false; // Flag to track if the NPC has received a mug
+    private string lastResponse; // Last response (correct/incorrect line)
 
     private void Start()
     {
         if (mainCamera == null)
         {
-            mainCamera = Camera.main;  // Automatically assign the main camera if not assigned
+            mainCamera = Camera.main;
         }
 
-        // Initialize the AudioSource and assign the talking sound
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = talkingSound;
-
-        // Set default text based on the NPC's tag
+        // Set default responses and orders based on the NPC's tag
         switch (gameObject.tag)
         {
             case "Stacy":
-                interactTexts = new string[] { "It's a lovely day!", "Have you heard about the murder down the street?", "My bestie told me the murder attends this cafe often", "Anyways, could I get a regular black coffee please?" };
+                desiredIngredients = new List<string> { "Coffee" };
+                correctResponse = "Thanks! Just how I like it.";
+                incorrectResponse = "That's not what I ordered!";
+                interactTexts = new string[] { "It's a lovely day!", "Have you heard about the murder down the street?", "My bestie told me the murder attends this cafe often.", "Anyways, could I get a regular black coffee please?" };
                 break;
             case "Mark":
-                interactTexts = new string[] { "Hey", "Could I get a coffee with milk?", "Make it quick, I dont have a lot of paitence." };
+                desiredIngredients = new List<string> { "Coffee", "Milk" };
+                correctResponse = "Finally, my coffee with milk.";
+                incorrectResponse = "Ugh, this isn't right.";
+                interactTexts = new string[] { "Hey", "Could I get a coffee with milk?", "Make it quick, I don’t have a lot of patience." };
                 break;
             case "Dave":
+                desiredIngredients = new List<string> { "Coffee", "Milk", "CSyrup" }; // Caramel syrup
+                correctResponse = "Perfect! Thank you.";
+                incorrectResponse = "I asked for caramel syrup!";
                 interactTexts = new string[] { "This place is adorable!", "I'll have a coffee with milk and caramel syrup pretty please!" };
                 break;
         }
+
+        // Initialize AudioSource
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = talkingSound;
     }
 
     public void Interact()
     {
-        if (!isInteracting)  // Only allow interaction if not already interacting
+        if (hasReceivedMug)
         {
-            isInteracting = true;  // Set flag to indicate interaction is in progress
-            Debug.Log($"Interacting with NPC: {gameObject.name}");
-            StartCoroutine(DisplayDialogue());
+            // After receiving a mug, repeat the last response
+            ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
+            Debug.Log($"NPC {name} says: {lastResponse}");
+        }
+        else
+        {
+            StartCoroutine(DisplayDialogue(interactTexts));
         }
     }
 
-    private IEnumerator DisplayDialogue()
+    public void ReceiveMug(GameObject mug)
     {
-        foreach (var text in interactTexts)
+        Debug.Log($"NPC {name} received the mug.");
+        MugSnapper mugSnapper = mug.GetComponent<MugSnapper>();
+
+        if (mugSnapper != null)
+        {
+            bool isOrderCorrect = CheckIngredients(mugSnapper);
+            lastResponse = isOrderCorrect ? correctResponse : incorrectResponse;
+
+            ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
+            audioSource.PlayOneShot(talkingSound);
+
+            Debug.Log($"NPC {name} says: {lastResponse}");
+            hasReceivedMug = true; // Mark that the NPC has received a mug
+        }
+    }
+
+    private bool CheckIngredients(MugSnapper mugSnapper)
+    {
+        var mugIngredients = mugSnapper.GetIngredients();
+
+        // Check if all desired ingredients are present in the mug
+        foreach (string ingredient in desiredIngredients)
+        {
+            if (!mugIngredients.Contains(ingredient))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private IEnumerator DisplayDialogue(string[] dialogueTexts)
+    {
+        foreach (var text in dialogueTexts)
         {
             ChatBubble.Create(canvasTransform, text, textPrefab, mainCamera, transform);
-            audioSource.PlayOneShot(talkingSound); // Play the talking sound
-            yield return new WaitForSeconds(3f); // Wait for 3 seconds before showing the next sentence
+            audioSource.PlayOneShot(talkingSound);
+            yield return new WaitForSeconds(3f); // Wait before showing the next text
         }
-        
-        isInteracting = false;  // Reset flag after dialogue is finished
-    }
-
-    public string GetInteractText()
-    {
-        return interactText;
     }
 }

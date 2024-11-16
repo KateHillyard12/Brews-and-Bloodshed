@@ -87,8 +87,17 @@ public class ObjectGrabbable : MonoBehaviour
         {
             currentSnapPoint.SnapToPoint(transform);
             isSnapping = true;
-            objectRigidbody.isKinematic = true; // Stop movement
-            StartCoroutine(PickUpCooldown());
+
+            if (currentSnapPoint.CompareTag("Machine"))
+            {
+                objectRigidbody.isKinematic = true; // Stop movement
+                StartCoroutine(PickUpCooldown());
+            }
+            else if (currentSnapPoint.CompareTag("NPC"))
+            {
+                objectRigidbody.isKinematic = true; // Mug is held
+                objectRigidbody.constraints = RigidbodyConstraints.FreezeAll; // Prevent further movement
+            }
         }
     }
 
