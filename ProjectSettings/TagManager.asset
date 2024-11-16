@@ -19,6 +19,7 @@ TagManager:
   - Mark
   - Dave
   - CooldownUI
+  - NPC
   layers:
   - Default
   - TransparentFX
@@ -27,8 +28,8 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
-  - 
+  - Machine
+  - NPC
   - 
   - 
   - 

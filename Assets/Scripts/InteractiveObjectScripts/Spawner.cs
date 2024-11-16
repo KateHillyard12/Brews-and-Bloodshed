@@ -2,37 +2,52 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject prefabToSpawn;      // The prefab to be instantiated
     public Transform[] spawnPoints;       // Array of specific spawn points
     public LayerMask floorLayer;          // Layer mask to identify the floor collider
+    private GameObject[] existingMugs;    // Array to store the existing mugs
 
     void Awake()
     {
-        SpawnPrefabs();                   // Call the function to spawn prefabs
+        InitializeMugs();
     }
 
-    void SpawnPrefabs()
+    void InitializeMugs()
     {
-        if (prefabToSpawn == null)
-        {
-            Debug.LogWarning("Prefab to spawn is not assigned!");
-            return;
-        }
-
         if (spawnPoints.Length == 0)
         {
             Debug.LogWarning("No spawn points defined!");
             return;
         }
 
-        // Loop through each spawn point to instantiate the prefab
-        foreach (Transform spawnPoint in spawnPoints)
+        // Find all existing mugs in the scene by their tag
+        existingMugs = GameObject.FindGameObjectsWithTag("Mug");
+
+        // Check if we have the same number of mugs and spawn points
+        if (existingMugs.Length != spawnPoints.Length)
         {
-            // Instantiate the prefab and assign its spawn point
-            GameObject spawnedPrefab = Instantiate(prefabToSpawn, spawnPoint.position, spawnPoint.rotation);
-            RespawnOnCollision respawnComponent = spawnedPrefab.AddComponent<RespawnOnCollision>();
-            respawnComponent.SetSpawnPoint(spawnPoint);
-            respawnComponent.SetFloorLayer(floorLayer);
+            Debug.LogWarning("The number of spawn points does not match the number of mugs!");
+            return;
+        }
+
+        for (int i = 0; i < existingMugs.Length; i++)
+        {
+                GameObject mug = existingMugs[i];
+                Transform spawnPoint = spawnPoints[i];
+
+                // Set initial position and rotation
+                mug.transform.position = spawnPoint.position;
+                mug.transform.rotation = spawnPoint.rotation;
+
+                // Add or configure respawn component
+                RespawnOnCollision respawnComponent = mug.GetComponent<RespawnOnCollision>();
+                if (respawnComponent == null)
+                {
+                    respawnComponent = mug.AddComponent<RespawnOnCollision>();
+                }
+
+                respawnComponent.SetSpawnPoint(spawnPoint);
+                respawnComponent.SetFloorLayer(floorLayer);
+                respawnComponent.SetMugState(mug.GetComponent<MugState>());
         }
     }
 }

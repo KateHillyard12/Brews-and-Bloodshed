@@ -12,34 +12,45 @@ public class ObjectGrabbable : MonoBehaviour
     private SnapPoint currentSnapPoint;
 
     // UI elements
-    public Slider cooldownSlider;
-    public GameObject cooldownUI;
+    [SerializeField] private Slider cooldownSlider;
+    [SerializeField] private GameObject cooldownUI;
 
     private void Awake()
     {
         objectRigidbody = GetComponent<Rigidbody>();
-        cooldownUI.SetActive(false);  // Initially hide cooldown UI
+        cooldownUI?.SetActive(false); // Hide cooldown UI initially
     }
 
-    public void Grab(Transform objectGrabPointTransform)
+    public void Grab(Transform grabPoint)
     {
         if (!canPickUp) return;
 
-        this.objectGrabPointTransform = objectGrabPointTransform;
+        objectGrabPointTransform = grabPoint;
         objectRigidbody.useGravity = false;
-        objectRigidbody.isKinematic = false;  // Ensure physics can interact when grabbed
+        objectRigidbody.isKinematic = false;
         isSnapping = false;
+
+        // Release the current snap point if snapped
+        if (currentSnapPoint != null)
+        {
+            currentSnapPoint.Release();
+            currentSnapPoint = null;
+        }
     }
 
     public void Drop()
     {
-        this.objectGrabPointTransform = null;
+        objectGrabPointTransform = null;
         objectRigidbody.useGravity = true;
 
         if (currentSnapPoint != null)
         {
             SnapToPoint();
         }
+
+        // Notify the MugSnapper if attached
+        MugSnapper mugSnapper = GetComponent<MugSnapper>();
+        mugSnapper?.DropMug();
     }
 
     private void FixedUpdate()
@@ -63,8 +74,9 @@ public class ObjectGrabbable : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         SnapPoint snapPoint = other.GetComponent<SnapPoint>();
-        if (snapPoint == currentSnapPoint)
+        if (snapPoint != null && snapPoint == currentSnapPoint)
         {
+            currentSnapPoint.Release();
             currentSnapPoint = null;
         }
     }
@@ -75,8 +87,7 @@ public class ObjectGrabbable : MonoBehaviour
         {
             currentSnapPoint.SnapToPoint(transform);
             isSnapping = true;
-            objectRigidbody.isKinematic = true;  // Make it kinematic to stop it from moving
-            Debug.Log($"{currentSnapPoint.machineType} added");
+            objectRigidbody.isKinematic = true; // Stop movement
             StartCoroutine(PickUpCooldown());
         }
     }
@@ -84,22 +95,24 @@ public class ObjectGrabbable : MonoBehaviour
     private IEnumerator PickUpCooldown()
     {
         canPickUp = false;
-        cooldownUI.SetActive(true);
+        cooldownUI?.SetActive(true);
         cooldownSlider.value = 0;
 
         float cooldownTime = 5f;
-        float currentTime = 0;
-
-        while (currentTime < cooldownTime)
+        for (float t = 0; t < cooldownTime; t += Time.deltaTime)
         {
-            currentTime += Time.deltaTime;
-            cooldownSlider.value = currentTime / cooldownTime;
+            cooldownSlider.value = t / cooldownTime;
             yield return null;
         }
+        // Ensure state is reset after cooldown
+        if (currentSnapPoint != null)
+        {
+            currentSnapPoint.Release();
+        }
 
-        canPickUp = true;  // Allow the mug to be picked up
-        isSnapping = false;  // Reset snapping flag
-        objectRigidbody.isKinematic = false;  // Allow physics to apply when picking up again
-        cooldownUI.SetActive(false);  // Hide the cooldown UI
+        canPickUp = true;
+        isSnapping = false;
+        objectRigidbody.isKinematic = false;
+        cooldownUI?.SetActive(false);
     }
 }

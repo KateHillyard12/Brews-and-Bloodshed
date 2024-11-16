@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 815332090490433645}
   - component: {fileID: 4471030588936097622}
   - component: {fileID: 1309690281}
+  - component: {fileID: 1691517721}
   m_Layer: 0
   m_Name: tea_machine
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1826854518570186029}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3144370380101931800}
@@ -96,8 +97,22 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.50295293, y: 0.64806396, z: 0.43428135}
-  m_Center: {x: -0.000000014901161, y: 0.32403186, z: -0.00000024586916}
+  m_Size: {x: 0.50295293, y: 0.64806396, z: 0.55382764}
+  m_Center: {x: 0, y: 0.32403186, z: 0.05977291}
+--- !u!114 &1691517721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826854518570186029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 250f80347104ce14ab4815b3dc60469e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  machineType: 1
+  customMachineName: Milk Machine
 --- !u!1 &8038114325201366149
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,6 +123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3144370380101931800}
   - component: {fileID: 8882537475637700652}
+  - component: {fileID: 2012985230}
   m_Layer: 0
   m_Name: SnapPoint
   m_TagString: Untagged
@@ -123,7 +139,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8038114325201366149}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.119, z: 0.084}
+  m_LocalPosition: {x: 0.012, y: 0.247, z: 0.358}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -144,3 +160,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   machineType: 1
+--- !u!65 &2012985230
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8038114325201366149}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7833837, y: 1, z: 1.0525454}
+  m_Center: {x: 0.10830814, y: 0, z: 0.026272714}

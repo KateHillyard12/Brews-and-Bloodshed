@@ -15,7 +15,7 @@ public class PlayerPickUpDrop : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E)){
             if(objectGrabbable == null){
                 // Code for picking up the object
-                float pickupDistance = 5f;
+                float pickupDistance = 8f;
                 if(Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit raycastHit, pickupDistance, pickupLayerMask)){
                     Debug.Log("Hit: " + raycastHit.transform.name);
                     if(raycastHit.transform.TryGetComponent(out ObjectGrabbable grabbedObject)){

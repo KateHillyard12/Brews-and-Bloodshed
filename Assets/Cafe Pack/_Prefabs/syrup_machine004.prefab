@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7211509463657212073}
   - component: {fileID: 2253344822521324947}
   - component: {fileID: 1229123481}
+  - component: {fileID: 415733771}
   m_Layer: 0
   m_Name: syrup_machine004
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5555947551806193136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8771087740352371772}
@@ -98,6 +99,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.27379847, y: 0.6292945, z: 0.5583579}
   m_Center: {x: -0.00000008940694, y: 0.31464726, z: -0.00000047683716}
+--- !u!114 &415733771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555947551806193136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 250f80347104ce14ab4815b3dc60469e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  machineType: 2
+  customMachineName: Vanilla Syrup
 --- !u!1 &8278338784445452583
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,6 +123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8771087740352371772}
   - component: {fileID: 5184340098139895017}
+  - component: {fileID: 848058101}
   m_Layer: 0
   m_Name: SnapPoint
   m_TagString: Untagged
@@ -123,7 +139,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8278338784445452583}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.004, y: 0.085, z: 0.081}
+  m_LocalPosition: {x: -0.022, y: 0.211, z: 0.346}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -144,3 +160,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOccupied: 0
   machineType: 2
+--- !u!65 &848058101
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278338784445452583}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.38626772, y: 1, z: 1}
+  m_Center: {x: -0.009638533, y: 0, z: -2.5949516e-17}

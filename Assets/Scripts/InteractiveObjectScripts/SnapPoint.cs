@@ -19,5 +19,6 @@ public class SnapPoint : MonoBehaviour
     public void Release()
     {
         isOccupied = false;  // Release the snap point
+        Debug.Log("released");
     }
 }
