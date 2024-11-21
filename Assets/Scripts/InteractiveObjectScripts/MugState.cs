@@ -18,11 +18,11 @@ public class MugState : MonoBehaviour
 
         DebugIngredients();
     }
-
+    
     public void ResetState()
     {
-        ingredients.Clear();
-        DebugIngredients(); 
+        ingredients.Clear(); // Clear all ingredients
+        Debug.Log("Ingredients after reset: " + string.Join(", ", ingredients));
     }
 
     private void DebugIngredients()

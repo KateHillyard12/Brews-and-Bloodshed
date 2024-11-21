@@ -57,15 +57,18 @@ public class MugSnapper : MonoBehaviour
             }
             else if (currentSnapPoint.CompareTag("NPC"))
             {
-                // NPC interaction: Mug is held permanently
-                Debug.Log("Mug given to NPC. It cannot be retrieved.");
-                currentSnapPoint.isOccupied = true;
-                enabled = false; // Disable the MugSnapper script
+                // NPC interaction: Notify the NPC that they received the mug
+                NPCInteractable npc = currentSnapPoint.GetComponentInParent<NPCInteractable>();
+                if (npc != null)
+                {
+                    Debug.Log($"Mug given to NPC: {npc.name}");
+                    npc.ReceiveMug(this.gameObject); // Notify the NPC
+                    currentSnapPoint.isOccupied = true;
+                    enabled = false; // Disable the MugSnapper script
+                }
             }
         }
     }
-
-
 
     private void AddIngredient(string ingredientName, Color ingredientColor)
     {
@@ -95,4 +98,11 @@ public class MugSnapper : MonoBehaviour
         return new List<string>(ingredients);
     }
 
+    public void ResetState()
+    {
+        ingredients.Clear();
+        currentColor = Color.white;
+        UpdateMugColor();
+        Debug.Log("MugSnapper reset: ingredients cleared, color reset.");
+    }
 }

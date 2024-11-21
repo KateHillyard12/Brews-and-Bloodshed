@@ -15,8 +15,11 @@ public class NPCInteractable : MonoBehaviour
     [SerializeField] private string incorrectResponse; // Response for incorrect order
     [SerializeField] private string[] interactTexts; // Interaction texts before receiving a mug
 
-    private bool hasReceivedMug = false; // Flag to track if the NPC has received a mug
+    public bool HasReceivedMug { get; private set; } = false;
+
     private string lastResponse; // Last response (correct/incorrect line)
+    private NPC npcCurrentlyLookingAt; // To track the NPC currently being looked at
+     private MovementScript playerMovementScript; // Reference to player movement script
 
     private void Start()
     {
@@ -24,6 +27,7 @@ public class NPCInteractable : MonoBehaviour
         {
             mainCamera = Camera.main;
         }
+        playerMovementScript = FindObjectOfType<MovementScript>();
 
         // Set default responses and orders based on the NPC's tag
         switch (gameObject.tag)
@@ -53,9 +57,111 @@ public class NPCInteractable : MonoBehaviour
         audioSource.clip = talkingSound;
     }
 
+    void Update()
+    {
+        // Ensure the hover effect and selection only work when the resolution is active
+        if (playerMovementScript.isResolutionActive)
+        {
+            Debug.Log("Resolution active.");
+            // Raycast to detect which NPC the player is looking at
+            float radius = 0.1f; 
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.SphereCast(ray.origin, radius, ray.direction, out hit))
+            {
+                // Check if the raycast hit an NPC child (tagged as NPC)
+                if (hit.collider.CompareTag("NPC"))
+                {
+                    Debug.Log("Looking at NPC child: " + hit.collider.name);
+
+                    // Get the parent of the NPC child
+                    Transform npcParent = hit.collider.transform.parent;
+                    if (npcParent != null)
+                    {
+                        Debug.Log($"Looking at NPC parent: {npcParent.name}");
+
+                        // Apply hover effect to the parent
+                        NPC npc = npcParent.GetComponent<NPC>();
+                        if (npc != null)
+                        {
+                            npc.SetHoverMaterial(true);
+                            npcCurrentlyLookingAt = npc;
+
+                            // If the player presses 'Q', select the NPC
+                            if (Input.GetKeyDown(KeyCode.Q))
+                            {
+                                npc.SelectNPC(); // Change material to selected
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // If the player is not looking at any NPC, disable hover
+                if (npcCurrentlyLookingAt != null)
+                {
+                    npcCurrentlyLookingAt.SetHoverMaterial(false);
+                    npcCurrentlyLookingAt = null;
+                }
+            }
+        }
+        else
+        {
+            // Ensure hover effect is disabled when not in resolution
+            if (npcCurrentlyLookingAt != null)
+            {
+                npcCurrentlyLookingAt.SetHoverMaterial(false);
+                npcCurrentlyLookingAt = null;
+            }
+        }
+    }
+
+
+    public void EnableHoverEffect()
+    {
+        Debug.Log("Hover effect enabled.");
+        // Raycast logic to detect if the player is looking at the NPC
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.CompareTag("NPC"))
+            {
+                NPC npc = hit.collider.GetComponent<NPC>();
+                if (npc != null)
+                {
+                    npc.SetHoverMaterial(true); // Apply hover material
+                }
+            }
+        }
+    }
+
+    public void DisableHoverEffect()
+    {
+        Debug.Log("Hover effect disabled.");
+        // Raycast logic to stop the hover effect
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.CompareTag("NPC"))
+            {
+                NPC npc = hit.collider.GetComponent<NPC>();
+                if (npc != null)
+                {
+                    npc.SetHoverMaterial(false); // Reset material
+                }
+            }
+        }
+    }
+
     public void Interact()
     {
-        if (hasReceivedMug)
+        if (HasReceivedMug)
         {
             // After receiving a mug, repeat the last response
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
@@ -81,7 +187,8 @@ public class NPCInteractable : MonoBehaviour
             audioSource.PlayOneShot(talkingSound);
 
             Debug.Log($"NPC {name} says: {lastResponse}");
-            hasReceivedMug = true; // Mark that the NPC has received a mug
+            HasReceivedMug = true;
+            Debug.Log($"{name} has received their mug.");
         }
     }
 
@@ -89,16 +196,44 @@ public class NPCInteractable : MonoBehaviour
     {
         var mugIngredients = mugSnapper.GetIngredients();
 
-        // Check if all desired ingredients are present in the mug
-        foreach (string ingredient in desiredIngredients)
+        // Check if the number of ingredients matches
+        if (mugIngredients.Count != desiredIngredients.Count)
         {
-            if (!mugIngredients.Contains(ingredient))
+            return false;
+        }
+
+        // Create dictionaries to count occurrences of each ingredient
+        var desiredCount = CountIngredients(desiredIngredients);
+        var mugCount = CountIngredients(mugIngredients);
+
+        // Compare the dictionaries
+        foreach (var ingredient in desiredCount)
+        {
+            if (!mugCount.ContainsKey(ingredient.Key) || mugCount[ingredient.Key] != ingredient.Value)
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    // Helper method to count ingredient occurrences
+    private Dictionary<string, int> CountIngredients(List<string> ingredients)
+    {
+        var ingredientCount = new Dictionary<string, int>();
+        foreach (var ingredient in ingredients)
+        {
+            if (ingredientCount.ContainsKey(ingredient))
+            {
+                ingredientCount[ingredient]++;
+            }
+            else
+            {
+                ingredientCount[ingredient] = 1;
+            }
+        }
+        return ingredientCount;
     }
 
     private IEnumerator DisplayDialogue(string[] dialogueTexts)

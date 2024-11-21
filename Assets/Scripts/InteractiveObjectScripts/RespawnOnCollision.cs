@@ -1,10 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RespawnOnCollision : MonoBehaviour
 {
     private Transform spawnPoint;
     private LayerMask floorLayer;
-    private MugState mugState;
 
     public void SetSpawnPoint(Transform point)
     {
@@ -14,11 +15,6 @@ public class RespawnOnCollision : MonoBehaviour
     public void SetFloorLayer(LayerMask layer)
     {
         floorLayer = layer;
-    }
-
-    public void SetMugState(MugState state)
-    {
-        mugState = state;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -36,16 +32,35 @@ public class RespawnOnCollision : MonoBehaviour
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
 
-        // Reset state and color
-        if (mugState != null)
+        // Reset MugSnapper state
+        MugSnapper mugSnapper = GetComponent<MugSnapper>();
+        if (mugSnapper != null)
         {
-            mugState.ResetState();
+            mugSnapper.ResetState();
         }
 
-        Renderer renderer = GetComponent<Renderer>();
+        // Reset ObjectGrabbable state
+        ObjectGrabbable grabbable = GetComponent<ObjectGrabbable>();
+        if (grabbable != null)
+        {
+            grabbable.ResetGrabbable();
+        }
+
+        // Reset Renderer (color)
+        Renderer renderer = GetComponentInChildren<Renderer>();
         if (renderer != null)
         {
-            renderer.material.color = Color.white; // Reset to default color
+            renderer.material.color = Color.white; // Reset color
         }
+
+        Debug.Log("Mug fully reset and respawned.");
     }
+
+
+    private IEnumerator EnableInteractionAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // Adjust delay as necessary
+        Debug.Log("Mug ready for interaction.");
+    }
+
 }

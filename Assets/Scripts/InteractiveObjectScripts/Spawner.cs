@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -31,23 +32,22 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < existingMugs.Length; i++)
         {
-                GameObject mug = existingMugs[i];
-                Transform spawnPoint = spawnPoints[i];
+            GameObject mug = existingMugs[i];
+            Transform spawnPoint = spawnPoints[i];
 
-                // Set initial position and rotation
-                mug.transform.position = spawnPoint.position;
-                mug.transform.rotation = spawnPoint.rotation;
+            // Set initial position and rotation
+            mug.transform.position = spawnPoint.position;
+            mug.transform.rotation = spawnPoint.rotation;
 
-                // Add or configure respawn component
-                RespawnOnCollision respawnComponent = mug.GetComponent<RespawnOnCollision>();
-                if (respawnComponent == null)
-                {
-                    respawnComponent = mug.AddComponent<RespawnOnCollision>();
-                }
+            // Add or configure respawn component
+            RespawnOnCollision respawnComponent = mug.GetComponent<RespawnOnCollision>();
+            if (respawnComponent == null)
+            {
+                respawnComponent = mug.AddComponent<RespawnOnCollision>();
+            }
 
-                respawnComponent.SetSpawnPoint(spawnPoint);
-                respawnComponent.SetFloorLayer(floorLayer);
-                respawnComponent.SetMugState(mug.GetComponent<MugState>());
+            respawnComponent.SetSpawnPoint(spawnPoint);
+            respawnComponent.SetFloorLayer(floorLayer);
         }
     }
 }

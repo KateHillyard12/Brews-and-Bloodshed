@@ -124,4 +124,13 @@ public class ObjectGrabbable : MonoBehaviour
         objectRigidbody.isKinematic = false;
         cooldownUI?.SetActive(false);
     }
+
+    public void ResetGrabbable()
+    {
+        currentSnapPoint?.Release();
+        currentSnapPoint = null;
+        isSnapping = false;
+        canPickUp = true;
+    }
+
 }
