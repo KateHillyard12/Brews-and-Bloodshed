@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ChatBubble : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class ChatBubble : MonoBehaviour
         chatBubble.mainCamera = mainCamera;
 
         // Set the actual text
-        Text chatText = chatBubbleText.GetComponent<Text>();
+        TextMeshProUGUI chatText = chatBubbleText.GetComponent<TextMeshProUGUI>();
         chatText.text = text;
 
         // Destroy after a set duration (e.g., 2 seconds)

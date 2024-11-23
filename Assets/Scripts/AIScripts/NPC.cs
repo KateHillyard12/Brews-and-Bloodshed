@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class NPC : MonoBehaviour
 {
-    public bool HasMug { get; private set; }
     public Material defaultMaterial;
     public Material hoverMaterial;
     public Material selectedMaterial;
-    private Renderer npcRenderer;
 
+    private Renderer npcRenderer;
+    
+    // Reference to ResolutionManager
+    public ResolutionManager resolutionManager;
 
     private void Start()
     {
@@ -18,26 +20,35 @@ public class NPC : MonoBehaviour
         {
             Debug.LogError("No Renderer found on NPC");
         }
+
+        // Optionally, you can find ResolutionManager dynamically if it's not assigned
+        if (resolutionManager == null)
+        {
+            resolutionManager = FindObjectOfType<ResolutionManager>();
+        }
     }
 
-    public void SetHoverMaterial(bool isHovering)
+    public void HoverMaterial()
     {
-        if (npcRenderer != null)
-        {
-            if (isHovering)
-            {
-                npcRenderer.material = hoverMaterial; // Apply hover material
-            }
-            else
-            {
-                npcRenderer.material = defaultMaterial; // Revert to normal material
-            }
-        }
+        npcRenderer.material = hoverMaterial; // Apply hover material
     }
 
     public void SelectNPC()
     {
-        npcRenderer.material = selectedMaterial;
-        Debug.Log($"{gameObject.name} selected!");
+        if (npcRenderer != null)
+        {
+            npcRenderer.material = selectedMaterial; // Set to selected material
+
+            // Call EndResolution from ResolutionManager when the NPC is selected
+            if (resolutionManager != null)
+            {
+                resolutionManager.EndResolution(this);  // Pass this NPC as the selected NPC
+            }
+        }
+    }
+
+    public void ResetMaterial()
+    {
+        npcRenderer.material = defaultMaterial; // Reset to default material
     }
 }

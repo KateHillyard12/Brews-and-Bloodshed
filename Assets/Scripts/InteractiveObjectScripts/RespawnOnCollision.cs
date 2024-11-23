@@ -6,6 +6,7 @@ public class RespawnOnCollision : MonoBehaviour
 {
     private Transform spawnPoint;
     private LayerMask floorLayer;
+    private bool isRespawning = false; // Prevents multiple respawns at once
 
     public void SetSpawnPoint(Transform point)
     {
@@ -19,15 +20,19 @@ public class RespawnOnCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (((1 << collision.gameObject.layer) & floorLayer) != 0)
+        if (((1 << collision.gameObject.layer) & floorLayer) != 0 && !isRespawning)
         {
-            Debug.Log("Mug hit the floor, respawning...");
-            Respawn();
+            StartCoroutine(RespawnCoroutine());
         }
     }
 
-    private void Respawn()
+    private IEnumerator RespawnCoroutine()
     {
+        isRespawning = true;
+
+        // Wait for a brief moment before resetting
+        yield return new WaitForSeconds(0.1f);
+
         // Reset position and rotation
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
@@ -53,14 +58,19 @@ public class RespawnOnCollision : MonoBehaviour
             renderer.material.color = Color.white; // Reset color
         }
 
-        Debug.Log("Mug fully reset and respawned.");
+        // Reset other potential components (optional)
+        // Add additional resets here if necessary
+
+        // Optionally, reset the mug's ingredients or other states
+        MugState mugState = GetComponent<MugState>();
+        if (mugState != null)
+        {
+            mugState.ResetState();
+        }
+
+        // Give the mug a brief moment to reset before interaction
+        yield return new WaitForSeconds(0.1f);
+
+        isRespawning = false;
     }
-
-
-    private IEnumerator EnableInteractionAfterDelay()
-    {
-        yield return new WaitForSeconds(0.1f); // Adjust delay as necessary
-        Debug.Log("Mug ready for interaction.");
-    }
-
 }

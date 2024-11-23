@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementScript : MonoBehaviour
@@ -9,62 +8,56 @@ public class MovementScript : MonoBehaviour
     public bool isResolutionActive = false; // Flag to check if resolution is active
     private Rigidbody rb;
     private Transform playerCamera;
+
     private float verticalRotation = 0f;
 
-    // Define rotation limits for resolution phase
-    public float minYaw = -70f; // Minimum horizontal angle (yaw)
-    public float maxYaw = 70f;  // Maximum horizontal angle (yaw)
-    public float minPitch = -70f; // Minimum vertical angle (pitch)
-    public float maxPitch = 70f;  // Maximum vertical angle (pitch)
-
-    private float currentYaw = 0f; // Starting horizontal rotation (yaw)
-
-    // Hardcoded camera position and rotation for resolution phase
+    // Resolution phase camera settings
     public Vector3 resolutionCameraPosition = new Vector3(0f, 5.2f, 6.05f);
-    public Vector3 resolutionCameraRotation = new Vector3(13f, 180f, 0f); // Euler angles
 
-    private bool hasSetResolutionCamera = false;
+    private bool isTransitioning = false; // Track if camera is transitioning
+    private bool isNPCSelected = false; // Flag to prevent further actions after selection
 
-    void Start()
+    public Transform[] npcFocusPoints; // Array of positions to focus on each NPC
+    private int currentFocusIndex = 1; // Start by looking at the center NPC (index 1)
+    private NPC currentFocusedNPC; // Track currently focused NPC
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true; // We will rotate the player using mouse input
+        rb.freezeRotation = true; // Disable physics-based rotation
         playerCamera = Camera.main.transform;
 
-        // Lock cursor to the center of the screen
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked; // Lock cursor at game start
     }
 
-    void Update()
+    private void Update()
     {
+        // Resolution phase
         if (isResolutionActive)
         {
-            // During resolution phase
-            if (!hasSetResolutionCamera)
+            if (!isNPCSelected && !isTransitioning)
             {
-                hasSetResolutionCamera = true;
-                // Set camera to the predefined position and rotation
-                playerCamera.position = resolutionCameraPosition;
-                playerCamera.rotation = Quaternion.Euler(resolutionCameraRotation);
+                // Transition camera to resolution position
+                isTransitioning = true;
+                StartCoroutine(SmoothCameraTransition(resolutionCameraPosition, 2f));
             }
-
-            rb.velocity = Vector3.zero; // Ensure player doesn't move
-            HandleRestrictedCameraRotation(); // Apply rotation restrictions within the square
+            else
+            {
+                HandleFocusSwitching(); // Allow player to switch focus between NPCs
+                HandleNPCSelection();  // Handle NPC selection via input
+            }
         }
+        // Normal gameplay phase
         else
         {
-            // Normal gameplay
-            HandlePlayerMovement(); // Enable player movement
+            HandlePlayerMovement(); // Enable normal movement
             HandleCameraRotation(); // Normal camera rotation
-
-            // Reset the flag for the next resolution phase
-            hasSetResolutionCamera = false;
         }
     }
 
+    // Normal player movement logic
     void HandlePlayerMovement()
     {
-        // Player Movement
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -72,9 +65,9 @@ public class MovementScript : MonoBehaviour
         rb.velocity = moveDirection.normalized * moveSpeed;
     }
 
+    // Normal camera rotation logic
     void HandleCameraRotation()
     {
-        // Standard camera rotation for normal gameplay
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -85,28 +78,77 @@ public class MovementScript : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    void HandleRestrictedCameraRotation()
+    // Switch between NPC focus points (left and right)
+    void HandleFocusSwitching()
     {
-        // Restricted camera rotation during resolution phase
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            ChangeFocus(1); // Move focus left
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            ChangeFocus(-1); // Move focus right
+        }
+    }
 
-        // Update yaw (horizontal rotation) based on mouseX input, with boundaries
-        currentYaw += mouseX;
-        currentYaw = Mathf.Clamp(currentYaw, minYaw, maxYaw); // Clamp yaw to the limits of the square (left-right limits)
+    // Handle NPC selection when Q key is pressed
+    void HandleNPCSelection()
+    {
+        if (Input.GetKeyDown(KeyCode.Q) && currentFocusedNPC != null)
+        {
+            isNPCSelected = true; // Prevent further focus or selection
+            currentFocusedNPC.SelectNPC(); // Mark the NPC as selected
+        }
+    }
 
-        // Update pitch (vertical rotation) based on mouseY input, with boundaries
-        verticalRotation -= mouseY;
-        verticalRotation = Mathf.Clamp(verticalRotation, minPitch, maxPitch); // Clamp pitch to the limits (up-down limits)
+    // Switch focus between NPCs
+    void ChangeFocus(int direction)
+    {
+        int newFocusIndex = Mathf.Clamp(currentFocusIndex + direction, 0, npcFocusPoints.Length - 1);
 
-        // Apply vertical (pitch) rotation to the camera
-        playerCamera.localRotation = Quaternion.Euler(verticalRotation, 180f, 0f);
+        if (newFocusIndex != currentFocusIndex)
+        {
+            // Reset the previous NPC's material
+            currentFocusedNPC?.ResetMaterial();
 
-        // Apply horizontal (yaw) rotation to the player object
-        transform.localRotation = Quaternion.Euler(0f, currentYaw, 0f);
+            // Update focus index and look at the new NPC
+            currentFocusIndex = newFocusIndex;
+            StartCoroutine(SmoothFocusTransition(npcFocusPoints[currentFocusIndex], 0.5f));
 
+            // Update the currentFocusedNPC and highlight it
+            currentFocusedNPC = npcFocusPoints[currentFocusIndex].parent.GetComponent<NPC>();
+            currentFocusedNPC?.HoverMaterial();
+        }
+    }
 
-        // Set the hardcoded position and rotation
-        playerCamera.position = resolutionCameraPosition;
+    // Smooth camera transition to new NPC focus point
+    IEnumerator SmoothFocusTransition(Transform targetFocus, float duration)
+    {
+        Quaternion startRotation = playerCamera.rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(targetFocus.position - playerCamera.position);
+
+        for (float t = 0; t < 1; t += Time.deltaTime / duration)
+        {
+            playerCamera.position = Vector3.Lerp(playerCamera.position, resolutionCameraPosition, t);
+            playerCamera.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            yield return null;
+        }
+
+        playerCamera.rotation = targetRotation;
+    }
+
+    // Smooth transition to resolution camera position
+    public IEnumerator SmoothCameraTransition(Vector3 targetPosition, float duration)
+    {
+        Vector3 startPos = playerCamera.position;
+
+        for (float t = 0; t < 1; t += Time.deltaTime / duration)
+        {
+            playerCamera.position = Vector3.Lerp(startPos, targetPosition, t);
+            yield return null;
+        }
+
+        playerCamera.position = targetPosition;
+        isTransitioning = false; // Allow focus switching after transition
     }
 }

@@ -375,7 +375,6 @@
 "Assets/Scripts/MachineScripts/MachineTypeDisplay.cs"
 "Assets/Scripts/MusicManager.cs"
 "Assets/Scripts/PlayerScripts/MovementScript.cs"
-"Assets/Scripts/PlayerScripts/PlayerInteractUI.cs"
 "Assets/Scripts/PlayerScripts/PlayerPickUpDrop.cs"
 "Assets/Scripts/ResolutionManager.cs"
 "Assets/StartScreen/StartScreenController.cs"

@@ -1,29 +1,69 @@
+using System.Collections;
 using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    public AudioClip backgroundMusic;  // Assign your background music clip in the Inspector
-    private AudioSource audioSource;    // Reference to the AudioSource component
+    public AudioClip backgroundMusic;  // Background music clip
+    public AudioClip resolutionMusic;  // Resolution phase music clip
+    private AudioSource audioSource;   // AudioSource reference
+
+    private static MusicManager instance; // Singleton instance
 
     private void Awake()
     {
         // Ensure only one instance of MusicManager exists
-        if (FindObjectsOfType<MusicManager>().Length > 1)
+        if (instance != null)
         {
-            Destroy(gameObject);  // Destroy duplicate instances
+            Destroy(gameObject);  // Destroy duplicate instance
         }
         else
         {
+            instance = this;
             DontDestroyOnLoad(gameObject);  // Keep this instance alive across scenes
         }
     }
 
     private void Start()
     {
+        // Set up AudioSource and start playing background music
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = backgroundMusic;
-        audioSource.loop = true;  // Set the audio to loop
-        audioSource.volume = 0.5f;  // Adjust volume (0.0f to 1.0f)
-        audioSource.Play();  // Start playing the music
+        audioSource.loop = true;  // Loop the background music
+        audioSource.volume = 0.5f;  // Set initial volume
+        audioSource.Play();
+    }
+
+    public void ChangeMusic(AudioClip newClip, float fadeDuration = 1f)
+    {
+        StartCoroutine(FadeOutAndChangeMusic(newClip, fadeDuration));
+    }
+
+    private IEnumerator FadeOutAndChangeMusic(AudioClip newClip, float fadeDuration)
+    {
+        float startVolume = audioSource.volume;
+
+        // Fade out current music
+        while (audioSource.volume > 0)
+        {
+            audioSource.volume -= startVolume * Time.deltaTime / fadeDuration;
+            yield return null;
+        }
+
+        // Switch to the new music clip and start playing
+        audioSource.clip = newClip;
+        audioSource.Play();
+
+        // Fade in new music
+        while (audioSource.volume < startVolume)
+        {
+            audioSource.volume += startVolume * Time.deltaTime / fadeDuration;
+            yield return null;
+        }
+    }
+
+    // Reset music to the original background music
+    public void ResetMusic()
+    {
+        ChangeMusic(backgroundMusic);
     }
 }

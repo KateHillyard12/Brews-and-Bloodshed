@@ -18,8 +18,9 @@ public class NPCInteractable : MonoBehaviour
     public bool HasReceivedMug { get; private set; } = false;
 
     private string lastResponse; // Last response (correct/incorrect line)
-    private NPC npcCurrentlyLookingAt; // To track the NPC currently being looked at
-     private MovementScript playerMovementScript; // Reference to player movement script
+    private bool isDisplayingText = false;
+
+    private MovementScript playerMovementScript; // Reference to player movement script
 
     private void Start()
     {
@@ -57,115 +58,18 @@ public class NPCInteractable : MonoBehaviour
         audioSource.clip = talkingSound;
     }
 
-    void Update()
-    {
-        // Ensure the hover effect and selection only work when the resolution is active
-        if (playerMovementScript.isResolutionActive)
-        {
-            Debug.Log("Resolution active.");
-            // Raycast to detect which NPC the player is looking at
-            float radius = 0.1f; 
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.SphereCast(ray.origin, radius, ray.direction, out hit))
-            {
-                // Check if the raycast hit an NPC child (tagged as NPC)
-                if (hit.collider.CompareTag("NPC"))
-                {
-                    Debug.Log("Looking at NPC child: " + hit.collider.name);
-
-                    // Get the parent of the NPC child
-                    Transform npcParent = hit.collider.transform.parent;
-                    if (npcParent != null)
-                    {
-                        Debug.Log($"Looking at NPC parent: {npcParent.name}");
-
-                        // Apply hover effect to the parent
-                        NPC npc = npcParent.GetComponent<NPC>();
-                        if (npc != null)
-                        {
-                            npc.SetHoverMaterial(true);
-                            npcCurrentlyLookingAt = npc;
-
-                            // If the player presses 'Q', select the NPC
-                            if (Input.GetKeyDown(KeyCode.Q))
-                            {
-                                npc.SelectNPC(); // Change material to selected
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // If the player is not looking at any NPC, disable hover
-                if (npcCurrentlyLookingAt != null)
-                {
-                    npcCurrentlyLookingAt.SetHoverMaterial(false);
-                    npcCurrentlyLookingAt = null;
-                }
-            }
-        }
-        else
-        {
-            // Ensure hover effect is disabled when not in resolution
-            if (npcCurrentlyLookingAt != null)
-            {
-                npcCurrentlyLookingAt.SetHoverMaterial(false);
-                npcCurrentlyLookingAt = null;
-            }
-        }
-    }
-
-
-    public void EnableHoverEffect()
-    {
-        Debug.Log("Hover effect enabled.");
-        // Raycast logic to detect if the player is looking at the NPC
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.collider.CompareTag("NPC"))
-            {
-                NPC npc = hit.collider.GetComponent<NPC>();
-                if (npc != null)
-                {
-                    npc.SetHoverMaterial(true); // Apply hover material
-                }
-            }
-        }
-    }
-
-    public void DisableHoverEffect()
-    {
-        Debug.Log("Hover effect disabled.");
-        // Raycast logic to stop the hover effect
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            if (hit.collider.CompareTag("NPC"))
-            {
-                NPC npc = hit.collider.GetComponent<NPC>();
-                if (npc != null)
-                {
-                    npc.SetHoverMaterial(false); // Reset material
-                }
-            }
-        }
-    }
-
     public void Interact()
     {
+        if (isDisplayingText) return; // Prevent interaction if text is already displaying
+        
+        if (playerMovementScript != null && playerMovementScript.isResolutionActive)
+        {
+            return;
+        }
+
         if (HasReceivedMug)
         {
-            // After receiving a mug, repeat the last response
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
-            Debug.Log($"NPC {name} says: {lastResponse}");
         }
         else
         {
@@ -175,7 +79,6 @@ public class NPCInteractable : MonoBehaviour
 
     public void ReceiveMug(GameObject mug)
     {
-        Debug.Log($"NPC {name} received the mug.");
         MugSnapper mugSnapper = mug.GetComponent<MugSnapper>();
 
         if (mugSnapper != null)
@@ -186,9 +89,7 @@ public class NPCInteractable : MonoBehaviour
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
             audioSource.PlayOneShot(talkingSound);
 
-            Debug.Log($"NPC {name} says: {lastResponse}");
             HasReceivedMug = true;
-            Debug.Log($"{name} has received their mug.");
         }
     }
 
@@ -196,7 +97,7 @@ public class NPCInteractable : MonoBehaviour
     {
         var mugIngredients = mugSnapper.GetIngredients();
 
-        // Check if the number of ingredients matches
+        // Quick early exit if ingredient counts don't match
         if (mugIngredients.Count != desiredIngredients.Count)
         {
             return false;
@@ -235,14 +136,16 @@ public class NPCInteractable : MonoBehaviour
         }
         return ingredientCount;
     }
-
+    
     private IEnumerator DisplayDialogue(string[] dialogueTexts)
     {
+        isDisplayingText = true; // Mark text as active
         foreach (var text in dialogueTexts)
         {
             ChatBubble.Create(canvasTransform, text, textPrefab, mainCamera, transform);
             audioSource.PlayOneShot(talkingSound);
             yield return new WaitForSeconds(3f); // Wait before showing the next text
         }
+        isDisplayingText = false; // Reset flag after dialogue ends
     }
 }
