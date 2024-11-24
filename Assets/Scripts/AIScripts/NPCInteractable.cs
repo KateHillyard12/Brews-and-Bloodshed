@@ -20,7 +20,7 @@ public class NPCInteractable : MonoBehaviour
     private string lastResponse; // Last response (correct/incorrect line)
     private bool isDisplayingText = false;
 
-    private MovementScript playerMovementScript; // Reference to player movement script
+     private MovementScript playerMovementScript; // Reference to player movement script
 
     private void Start()
     {
@@ -64,12 +64,14 @@ public class NPCInteractable : MonoBehaviour
         
         if (playerMovementScript != null && playerMovementScript.isResolutionActive)
         {
+            Debug.Log("Interaction skipped during resolution.");
             return;
         }
 
         if (HasReceivedMug)
         {
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
+            Debug.Log($"NPC {name} says: {lastResponse}");
         }
         else
         {
@@ -79,6 +81,7 @@ public class NPCInteractable : MonoBehaviour
 
     public void ReceiveMug(GameObject mug)
     {
+        Debug.Log($"NPC {name} received the mug.");
         MugSnapper mugSnapper = mug.GetComponent<MugSnapper>();
 
         if (mugSnapper != null)
@@ -89,7 +92,9 @@ public class NPCInteractable : MonoBehaviour
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
             audioSource.PlayOneShot(talkingSound);
 
+            Debug.Log($"NPC {name} says: {lastResponse}");
             HasReceivedMug = true;
+            Debug.Log($"{name} has received their mug.");
         }
     }
 
@@ -97,7 +102,7 @@ public class NPCInteractable : MonoBehaviour
     {
         var mugIngredients = mugSnapper.GetIngredients();
 
-        // Quick early exit if ingredient counts don't match
+        // Check if the number of ingredients matches
         if (mugIngredients.Count != desiredIngredients.Count)
         {
             return false;

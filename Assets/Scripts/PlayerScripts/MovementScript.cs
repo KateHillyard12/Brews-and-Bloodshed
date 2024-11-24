@@ -32,10 +32,9 @@ public class MovementScript : MonoBehaviour
 
     private void Update()
     {
-        // Resolution phase
-        if (isResolutionActive)
+        if (isResolutionActive && !isNPCSelected)
         {
-            if (!isNPCSelected && !isTransitioning)
+            if (!isTransitioning)
             {
                 // Transition camera to resolution position
                 isTransitioning = true;
@@ -44,20 +43,28 @@ public class MovementScript : MonoBehaviour
             else
             {
                 HandleFocusSwitching(); // Allow player to switch focus between NPCs
-                HandleNPCSelection();  // Handle NPC selection via input
+
+                // Handle NPC selection
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    if (currentFocusedNPC != null)
+                    {
+                        isNPCSelected = true; // Prevent further focus or selection
+                        currentFocusedNPC.SelectNPC(); // Mark the NPC as selected
+                    }
+                }
             }
         }
-        // Normal gameplay phase
-        else
+        else if (!isResolutionActive)
         {
             HandlePlayerMovement(); // Enable normal movement
             HandleCameraRotation(); // Normal camera rotation
         }
     }
 
-    // Normal player movement logic
     void HandlePlayerMovement()
     {
+        // Player Movement
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -65,9 +72,9 @@ public class MovementScript : MonoBehaviour
         rb.velocity = moveDirection.normalized * moveSpeed;
     }
 
-    // Normal camera rotation logic
     void HandleCameraRotation()
     {
+        // Standard camera rotation for normal gameplay
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -78,9 +85,9 @@ public class MovementScript : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    // Switch between NPC focus points (left and right)
     void HandleFocusSwitching()
     {
+        // Check for left/right input to switch focus
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             ChangeFocus(1); // Move focus left
@@ -91,17 +98,6 @@ public class MovementScript : MonoBehaviour
         }
     }
 
-    // Handle NPC selection when Q key is pressed
-    void HandleNPCSelection()
-    {
-        if (Input.GetKeyDown(KeyCode.Q) && currentFocusedNPC != null)
-        {
-            isNPCSelected = true; // Prevent further focus or selection
-            currentFocusedNPC.SelectNPC(); // Mark the NPC as selected
-        }
-    }
-
-    // Switch focus between NPCs
     void ChangeFocus(int direction)
     {
         int newFocusIndex = Mathf.Clamp(currentFocusIndex + direction, 0, npcFocusPoints.Length - 1);
@@ -109,27 +105,33 @@ public class MovementScript : MonoBehaviour
         if (newFocusIndex != currentFocusIndex)
         {
             // Reset the previous NPC's material
-            currentFocusedNPC?.ResetMaterial();
+            if (currentFocusedNPC != null)
+            {
+                currentFocusedNPC.ResetMaterial();
+            }
 
             // Update focus index and look at the new NPC
             currentFocusIndex = newFocusIndex;
             StartCoroutine(SmoothFocusTransition(npcFocusPoints[currentFocusIndex], 0.5f));
 
-            // Update the currentFocusedNPC and highlight it
+            // Update the currentFocusedNPC
             currentFocusedNPC = npcFocusPoints[currentFocusIndex].parent.GetComponent<NPC>();
-            currentFocusedNPC?.HoverMaterial();
+            if (currentFocusedNPC != null)
+            {
+                currentFocusedNPC.HoverMaterial();
+            }
         }
     }
 
-    // Smooth camera transition to new NPC focus point
     IEnumerator SmoothFocusTransition(Transform targetFocus, float duration)
     {
+        Vector3 startPosition = playerCamera.position;
         Quaternion startRotation = playerCamera.rotation;
         Quaternion targetRotation = Quaternion.LookRotation(targetFocus.position - playerCamera.position);
 
         for (float t = 0; t < 1; t += Time.deltaTime / duration)
         {
-            playerCamera.position = Vector3.Lerp(playerCamera.position, resolutionCameraPosition, t);
+            playerCamera.position = resolutionCameraPosition; // Lock position to resolution camera position
             playerCamera.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
             yield return null;
         }
@@ -137,7 +139,6 @@ public class MovementScript : MonoBehaviour
         playerCamera.rotation = targetRotation;
     }
 
-    // Smooth transition to resolution camera position
     public IEnumerator SmoothCameraTransition(Vector3 targetPosition, float duration)
     {
         Vector3 startPos = playerCamera.position;
@@ -149,6 +150,8 @@ public class MovementScript : MonoBehaviour
         }
 
         playerCamera.position = targetPosition;
-        isTransitioning = false; // Allow focus switching after transition
+
+        // Allow focus switching once transition completes
+        isTransitioning = false;
     }
 }

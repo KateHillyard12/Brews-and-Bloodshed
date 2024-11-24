@@ -10,7 +10,6 @@ public class MugSnapper : MonoBehaviour
 
     private void Awake()
     {
-        // Define the colors for each ingredient type
         ingredientColors = new Dictionary<MachineType, Color>
         {
             { MachineType.Coffee, new Color(0.3f, 0.15f, 0f) }, // Dark brown
@@ -37,8 +36,7 @@ public class MugSnapper : MonoBehaviour
         SnapPoint snapPoint = other.GetComponent<SnapPoint>();
         if (snapPoint != null && snapPoint == currentSnapPoint)
         {
-            // Reset snap point when the mug exits the trigger zone
-            currentSnapPoint.isOccupied = false;
+            currentSnapPoint.Release();
             currentSnapPoint = null;
         }
     }
@@ -51,7 +49,7 @@ public class MugSnapper : MonoBehaviour
 
             if (currentSnapPoint.CompareTag("Machine"))
             {
-                // Handle machine interaction: Add ingredient and update color
+                // Machine interaction: add ingredient and update color
                 if (ingredientColors.TryGetValue(currentSnapPoint.machineType, out Color ingredientColor))
                 {
                     AddIngredient(currentSnapPoint.machineType.ToString(), ingredientColor);
@@ -59,7 +57,7 @@ public class MugSnapper : MonoBehaviour
             }
             else if (currentSnapPoint.CompareTag("NPC"))
             {
-                // Handle NPC interaction: Notify the NPC that they received the mug
+                // NPC interaction: Notify the NPC that they received the mug
                 NPCInteractable npc = currentSnapPoint.GetComponentInParent<NPCInteractable>();
                 if (npc != null)
                 {
@@ -74,11 +72,11 @@ public class MugSnapper : MonoBehaviour
 
     private void AddIngredient(string ingredientName, Color ingredientColor)
     {
-        // Add ingredient to the list
+        // Add the ingredient to the list
         ingredients.Add(ingredientName);
 
-        // Update the mug's color by mixing with the new ingredient
-        currentColor = Color.Lerp(currentColor, ingredientColor, 0.5f); // Mix colors
+        // Update the mug's color (mix the color)
+        currentColor = Color.Lerp(currentColor, ingredientColor, 0.5f);
         UpdateMugColor();
 
         // Output the ingredient list as a debug message
@@ -106,12 +104,5 @@ public class MugSnapper : MonoBehaviour
         currentColor = Color.white;
         UpdateMugColor();
         Debug.Log("MugSnapper reset: ingredients cleared, color reset.");
-
-        // Reset the snap point as well
-        if (currentSnapPoint != null)
-        {
-            currentSnapPoint.isOccupied = false; // Ensure snap point is available again
-            currentSnapPoint = null;
-        }
     }
 }

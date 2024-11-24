@@ -7,30 +7,27 @@ public class MusicManager : MonoBehaviour
     public AudioClip resolutionMusic;  // Resolution phase music clip
     private AudioSource audioSource;   // AudioSource reference
 
-    private static MusicManager instance; // Singleton instance
-
     private void Awake()
     {
         // Ensure only one instance of MusicManager exists
-        if (instance != null)
+        if (FindObjectsOfType<MusicManager>().Length > 1)
         {
-            Destroy(gameObject);  // Destroy duplicate instance
+            Destroy(gameObject);  // Destroy duplicate instances
         }
         else
         {
-            instance = this;
             DontDestroyOnLoad(gameObject);  // Keep this instance alive across scenes
         }
     }
 
     private void Start()
     {
-        // Set up AudioSource and start playing background music
+        // Add and configure the AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.clip = backgroundMusic;
         audioSource.loop = true;  // Loop the background music
         audioSource.volume = 0.5f;  // Set initial volume
-        audioSource.Play();
+        audioSource.Play();  // Start background music
     }
 
     public void ChangeMusic(AudioClip newClip, float fadeDuration = 1f)
@@ -49,7 +46,7 @@ public class MusicManager : MonoBehaviour
             yield return null;
         }
 
-        // Switch to the new music clip and start playing
+        // Switch to the new music clip
         audioSource.clip = newClip;
         audioSource.Play();
 
@@ -61,9 +58,9 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    // Reset music to the original background music
+    // Call this to reset music back to original background music
     public void ResetMusic()
     {
-        ChangeMusic(backgroundMusic);
+        ChangeMusic(backgroundMusic);  // Reset to the original music
     }
 }

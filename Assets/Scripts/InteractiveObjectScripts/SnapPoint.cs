@@ -19,6 +19,7 @@ public class SnapPoint : MonoBehaviour
         }
         else if (CompareTag("NPC"))
         {
+            Debug.Log("Snapped to NPC. Mug is now held.");
             mugTransform.parent = transform; // Parent the mug to the snap point
 
             // Notify the NPCInteractable script
@@ -26,6 +27,7 @@ public class SnapPoint : MonoBehaviour
             if (npc != null)
             {
                 npc.ReceiveMug(mugTransform.gameObject);
+                Debug.Log($"{npc.name} received a mug.");
             }
             else
             {
@@ -38,9 +40,11 @@ public class SnapPoint : MonoBehaviour
     {
         if (CompareTag("NPC"))
         {
+            Debug.Log("NPC snap points do not release mugs.");
             return;
         }
 
         isOccupied = false;
+        Debug.Log("Released snap point.");
     }
 }

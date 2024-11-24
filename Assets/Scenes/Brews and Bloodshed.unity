@@ -8506,7 +8506,7 @@ MonoBehaviour:
   finalText: {fileID: 1195616204}
   darkPanel: {fileID: 1123044693}
   resetButton: {fileID: 1467857868}
-  uiToHide: {fileID: 1962435941}
+  uiToHide: {fileID: 0}
   delayBeforePause: 1
 --- !u!1 &1769028182 stripped
 GameObject:
@@ -8977,8 +8977,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 893495315}
   isResolutionActive: 0
-  interactRange: 15
-  resolutionRange: 10
 --- !u!81 &1822133427
 AudioListener:
   m_ObjectHideFlags: 0

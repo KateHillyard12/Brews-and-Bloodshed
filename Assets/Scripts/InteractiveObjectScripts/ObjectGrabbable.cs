@@ -57,10 +57,8 @@ public class ObjectGrabbable : MonoBehaviour
     {
         if (objectGrabPointTransform != null && !isSnapping)
         {
-            // Smooth the movement towards the grab point
-            Vector3 targetPosition = objectGrabPointTransform.position;
-            Vector3 smoothPosition = Vector3.Lerp(objectRigidbody.position, targetPosition, Time.deltaTime * 10f);
-            objectRigidbody.MovePosition(smoothPosition);
+            Vector3 newPosition = Vector3.Lerp(objectRigidbody.position, objectGrabPointTransform.position, Time.deltaTime * 10f);
+            objectRigidbody.MovePosition(newPosition);
         }
     }
 
@@ -134,4 +132,5 @@ public class ObjectGrabbable : MonoBehaviour
         isSnapping = false;
         canPickUp = true;
     }
+
 }

@@ -38,6 +38,7 @@ public class NPC : MonoBehaviour
         if (npcRenderer != null)
         {
             npcRenderer.material = selectedMaterial; // Set to selected material
+            Debug.Log($"{gameObject.name} selected!");
 
             // Call EndResolution from ResolutionManager when the NPC is selected
             if (resolutionManager != null)

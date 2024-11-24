@@ -4,56 +4,52 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    private NPC selectedNPC;
+    private NPC selectedNPC; 
     public Camera playerCamera;
     public bool isResolutionActive;
 
-    // Range for interactions
-    public float interactRange = 15f;
-    public float resolutionRange = 10f;
 
     private void Update()
     {
-        // Handle regular NPC interaction (press Q)
-        if (Input.GetKeyDown(KeyCode.Q) && !isResolutionActive)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
+            float interactRange = 15f;
             Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
             if (Physics.Raycast(ray, out RaycastHit hit, interactRange))
             {
                 if (hit.collider.TryGetComponent(out NPCInteractable npcInteractable))
                 {
+                    Debug.Log("Interacting with: " + npcInteractable.name);
                     npcInteractable.Interact();
                 }
             }
         }
 
-        // Handle NPC selection when resolution mechanic is active
         if (Input.GetKeyDown(KeyCode.Q) && isResolutionActive)
         {
             Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
-            if (Physics.Raycast(ray, out RaycastHit hit, resolutionRange))
+            if (Physics.Raycast(ray, out RaycastHit hit, 10f))
             {
                 NPC npc = hit.collider.GetComponent<NPC>();
                 if (npc != null)
                 {
-                    // Reset previously selected NPC if there is one
                     if (selectedNPC != null)
                     {
-                        selectedNPC.ResetMaterial(); // Reset material or any other state
+                        selectedNPC.ResetMaterial(); // Reset previously selected NPC
                     }
 
-                    // Select the new NPC
                     selectedNPC = npc;
-                    selectedNPC.SelectNPC(); // Highlight the selected NPC
+                    selectedNPC.SelectNPC();
                 }
             }
         }
     }
 
-    // Optional: This method can be used if needed to get the closest interactable object
+    // Optional: You can keep this method if you want to get the closest interactable
     public NPCInteractable GetInteractableObject()
     {
         List<NPCInteractable> npcInteractableList = new List<NPCInteractable>();
+        float interactRange = 10f;
         Collider[] colliderArray = Physics.OverlapSphere(transform.position, interactRange);
         foreach (Collider collider in colliderArray)
         {
@@ -66,9 +62,16 @@ public class PlayerInteract : MonoBehaviour
         NPCInteractable closestInteractable = null;
         foreach (NPCInteractable npcInteractable in npcInteractableList)
         {
-            if (closestInteractable == null || Vector3.Distance(transform.position, npcInteractable.transform.position) < Vector3.Distance(transform.position, closestInteractable.transform.position))
+            if (closestInteractable == null)
             {
                 closestInteractable = npcInteractable;
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, npcInteractable.transform.position) < Vector3.Distance(transform.position, closestInteractable.transform.position))
+                {
+                    closestInteractable = npcInteractable;
+                }
             }
         }
 
