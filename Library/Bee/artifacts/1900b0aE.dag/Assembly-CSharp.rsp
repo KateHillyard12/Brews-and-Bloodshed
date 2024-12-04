@@ -364,6 +364,8 @@
 "Assets/Scripts/AIScripts/NPC.cs"
 "Assets/Scripts/AIScripts/NPCInteractable.cs"
 "Assets/Scripts/AIScripts/PlayerInteract.cs"
+"Assets/Scripts/DataManager.cs"
+"Assets/Scripts/GameManager.cs"
 "Assets/Scripts/InteractiveObjectScripts/MugSnapper.cs"
 "Assets/Scripts/InteractiveObjectScripts/MugState.cs"
 "Assets/Scripts/InteractiveObjectScripts/ObjectGrabbable.cs"

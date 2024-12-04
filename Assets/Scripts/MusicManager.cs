@@ -14,10 +14,6 @@ public class MusicManager : MonoBehaviour
         {
             Destroy(gameObject);  // Destroy duplicate instances
         }
-        else
-        {
-            DontDestroyOnLoad(gameObject);  // Keep this instance alive across scenes
-        }
     }
 
     private void Start()

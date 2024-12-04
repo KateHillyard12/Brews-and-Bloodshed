@@ -16,6 +16,7 @@ public class NPCInteractable : MonoBehaviour
     [SerializeField] private string[] interactTexts; // Interaction texts before receiving a mug
 
     public bool HasReceivedMug { get; private set; } = false;
+    public int InteractionCount { get; private set; } // Tracks number of interactions
 
     private string lastResponse; // Last response (correct/incorrect line)
     private bool isDisplayingText = false;
@@ -35,19 +36,19 @@ public class NPCInteractable : MonoBehaviour
         {
             case "Stacy":
                 desiredIngredients = new List<string> { "Coffee" };
-                correctResponse = "Thanks! Just how I like it.";
-                incorrectResponse = "That's not what I ordered!";
+                correctResponse = "Thanks! Just how I like it. I heard the murder likes milk.";
+                incorrectResponse = "That's not what I ordered! Oh well...";
                 interactTexts = new string[] { "It's a lovely day!", "Have you heard about the murder down the street?", "My bestie told me the murder attends this cafe often.", "Anyways, could I get a regular black coffee please?" };
                 break;
             case "Mark":
                 desiredIngredients = new List<string> { "Coffee", "Milk" };
-                correctResponse = "Finally, my coffee with milk.";
+                correctResponse = "Finally, my coffee with milk. I bet that murder is pretty happy to get away.";
                 incorrectResponse = "Ugh, this isn't right.";
                 interactTexts = new string[] { "Hey", "Could I get a coffee with milk?", "Make it quick, I don’t have a lot of patience." };
                 break;
             case "Dave":
                 desiredIngredients = new List<string> { "Coffee", "Milk", "CSyrup" }; // Caramel syrup
-                correctResponse = "Perfect! Thank you.";
+                correctResponse = "Perfect! Thank you. Im just so happy!";
                 incorrectResponse = "I asked for caramel syrup!";
                 interactTexts = new string[] { "This place is adorable!", "I'll have a coffee with milk and caramel syrup pretty please!" };
                 break;
@@ -60,6 +61,7 @@ public class NPCInteractable : MonoBehaviour
 
     public void Interact()
     {
+        InteractionCount++; // Increment interaction count
         if (isDisplayingText) return; // Prevent interaction if text is already displaying
         
         if (playerMovementScript != null && playerMovementScript.isResolutionActive)

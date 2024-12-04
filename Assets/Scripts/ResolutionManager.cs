@@ -24,6 +24,7 @@ public class ResolutionManager : MonoBehaviour
 
     void Start()
     {
+        
         musicManager = FindObjectOfType<MusicManager>();
         playerMovement = FindObjectOfType<MovementScript>();
 
@@ -126,15 +127,15 @@ public class ResolutionManager : MonoBehaviour
     {
         if (selectedNPC.name == "Stacy")
         {
-            return "You have selected Stacy. She looks nervous!";
+            return "You've chosen Stacy as the suspect. She appears visibly nervous. You reported to the police, convinced Stacy was the one responsible. However, when the case went to court, the judge declared her not guilty. As a result, the police revoked your barista license, leaving you penniless and stranded on the streets.";
         }
         else if (selectedNPC.name == "Mark")
         {
-            return "Mark seems impatient. He’s watching closely.";
+            return "Mark appears impatient, his eyes fixed on you with a tense gaze. After you reported him to the police, he was sentenced to death. However, just days after the execution, another murder occurred, revealing the tragic mistake—an innocent man had been executed.";
         }
         else if (selectedNPC.name == "Dave")
         {
-            return "Dave smiles warmly. He seems relaxed.";
+            return "Dave offers a warm smile, appearing completely relaxed. You share your suspicions with the police, and after a thorough investigation, Dave pleads guilty. Your café becomes renowned as the 'Murder Mystery Café,' attracting millions and turning you into a wealthy entrepreneur.";
         }
 
         return "Unknown NPC selected.";
@@ -161,13 +162,14 @@ public class ResolutionManager : MonoBehaviour
             musicManager.ResetMusic();
         }
 
-        // Optionally reset the player camera if necessary
-        if (playerCamera != null)
+        foreach (var obj in FindObjectsOfType<GameObject>())
         {
-            // Reassign or reset the player camera as needed
-            playerCamera.transform.position = Vector3.zero;  // Example position reset
-            playerCamera.transform.rotation = Quaternion.identity;  // Example rotation reset
+            if (obj.scene.name == null) // Objects not part of the current scene
+            {
+                Destroy(obj);
+            }
         }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

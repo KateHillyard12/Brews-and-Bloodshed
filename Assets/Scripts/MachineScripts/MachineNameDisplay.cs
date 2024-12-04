@@ -16,32 +16,49 @@ public class MachineNameDisplay : MonoBehaviour
 
     private void DetectMachine()
     {
-        // Draw ray for debugging (can be removed in production)
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main; // Reassign dynamically if null
+            if (playerCamera == null)
+            {
+                Debug.LogWarning("Player camera is null! Skipping detection.");
+                return;
+            }
+        }
+
+        if (machineNameText == null)
+        {
+            machineNameText = FindObjectOfType<TextMeshProUGUI>(); // Reassign dynamically if null
+            if (machineNameText == null)
+            {
+                Debug.LogWarning("MachineNameText is null! Skipping detection.");
+                return;
+            }
+        }
+
         Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * detectionRange, Color.red);
 
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, detectionRange, LayerMask.GetMask("Machine")))
+        if (Physics.Raycast(ray, out RaycastHit hit, detectionRange, LayerMask.GetMask("Machine")))
         {
-            MachineTypeDisplay machine = hit.transform.GetComponentInParent<MachineTypeDisplay>(); // Look for MachineTypeDisplay on parent
+            MachineTypeDisplay machine = hit.transform.GetComponentInParent<MachineTypeDisplay>();
             if (machine != null)
             {
-                if (!machineNameText.gameObject.activeSelf) // Only trigger fade in if it's not already active
+                if (!machineNameText.gameObject.activeSelf)
                 {
-                    StartCoroutine(FadeInText(machine.customMachineName)); // Start fading in the text
+                    StartCoroutine(FadeInText(machine.customMachineName));
                 }
                 machineNameText.text = machine.customMachineName;
                 return;
             }
         }
 
-        // If no machine is detected, fade out the text
         if (machineNameText.gameObject.activeSelf)
         {
             StartCoroutine(FadeOutText());
         }
     }
+
 
     private IEnumerator FadeInText(string newText)
     {

@@ -2508,7 +2508,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: b7f96a662542a6e4c995b590667504fe, type: 2}
   hoverMaterial: {fileID: 2100000, guid: 1208844048e277f47b60fd64e5720b93, type: 2}
   selectedMaterial: {fileID: 2100000, guid: ad9b92ee9df2c7a4eaae825a08895dbc, type: 2}
-  resolutionManager: {fileID: 1758919109}
+  resolutionManager: {fileID: 1359711793}
 --- !u!136 &525779149
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4787,7 +4787,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: bleh
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4814,7 +4814,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 44.75
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5631,7 +5631,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 459.75287, y: 0, z: 446.02893, w: -92.63672}
+  m_margin: {x: 171.88672, y: 0, z: 172.20508, w: -15.404266}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6101,6 +6101,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5887112114762775290, guid: 927d02e370320f749abeca2a8b506699, type: 3}
   m_PrefabInstance: {fileID: 1732575913}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1359711792
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1359711794}
+  - component: {fileID: 1359711793}
+  m_Layer: 0
+  m_Name: Resolution
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1359711793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359711792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05400eb0f1e73934c9e8f3b2a0f7ad55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcSnapPoints:
+  - {fileID: 1899062229}
+  - {fileID: 671484015}
+  - {fileID: 438037665}
+  playerCamera: {fileID: 893495315}
+  playerMovement: {fileID: 1822133429}
+  isResolutionActive: 0
+  resolutionText: {fileID: 1100953214}
+  finalText: {fileID: 1195616204}
+  darkPanel: {fileID: 1123044693}
+  resetButton: {fileID: 1467857868}
+  uiToHide: {fileID: 1962435941}
+  delayBeforePause: 1
+--- !u!4 &1359711794
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359711792}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.3133512, y: 4.56026, z: 7.5511374}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1362765166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8241,7 +8298,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 15ec32a55eda0f04db760b645c0ce86a, type: 2}
   hoverMaterial: {fileID: 2100000, guid: 580dcd00af7488a49aaf73b11a2bfe9e, type: 2}
   selectedMaterial: {fileID: 2100000, guid: ad9b92ee9df2c7a4eaae825a08895dbc, type: 2}
-  resolutionManager: {fileID: 1758919109}
+  resolutionManager: {fileID: 1359711793}
 --- !u!136 &1720592174
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8429,7 +8486,7 @@ GameObject:
   - component: {fileID: 1758919107}
   - component: {fileID: 1758919106}
   - component: {fileID: 1758919108}
-  - component: {fileID: 1758919109}
+  - component: {fileID: 1758919110}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8483,7 +8540,7 @@ MonoBehaviour:
   detectionRange: 5
   machineNameText: {fileID: 1015512473}
   fadeDuration: 0.5
---- !u!114 &1758919109
+--- !u!114 &1758919110
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8492,22 +8549,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1758919105}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05400eb0f1e73934c9e8f3b2a0f7ad55, type: 3}
+  m_Script: {fileID: 11500000, guid: c581bd0d71acd5241a758e09bca7417f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcSnapPoints:
-  - {fileID: 1899062229}
-  - {fileID: 671484015}
-  - {fileID: 438037665}
-  playerCamera: {fileID: 893495315}
-  playerMovement: {fileID: 1822133429}
-  isResolutionActive: 0
-  resolutionText: {fileID: 1100953214}
-  finalText: {fileID: 1195616204}
-  darkPanel: {fileID: 1123044693}
-  resetButton: {fileID: 1467857868}
-  uiToHide: {fileID: 0}
-  delayBeforePause: 1
+  npcInteractables:
+  - {fileID: 1720592172}
+  - {fileID: 525779143}
+  - {fileID: 1930900611}
+  resolutionManager: {fileID: 1359711793}
+  murdererNPC: Dave
 --- !u!1 &1769028182 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5845668223159089640, guid: c96262af6e8df904d89e3551154835e9, type: 3}
@@ -9729,7 +9779,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 3479c1883fcc58942a06052a3fa866ed, type: 2}
   hoverMaterial: {fileID: 2100000, guid: a9133b56f5243064381284431256dd77, type: 2}
   selectedMaterial: {fileID: 2100000, guid: ad9b92ee9df2c7a4eaae825a08895dbc, type: 2}
-  resolutionManager: {fileID: 1758919109}
+  resolutionManager: {fileID: 1359711793}
 --- !u!136 &1930900617
 CapsuleCollider:
   m_ObjectHideFlags: 0
