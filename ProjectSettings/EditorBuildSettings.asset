@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: d9dcd63de04e5e840958125516f1a425
+  - enabled: 1
+    path: Assets/Scenes/Brews and Bloodshed.unity
+    guid: f298c2a45e7f3b64e943ec9264b91ae7
   m_configObjects: {}
