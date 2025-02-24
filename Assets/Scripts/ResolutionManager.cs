@@ -16,7 +16,6 @@ public class ResolutionManager : MonoBehaviour
     public TextMeshProUGUI resolutionText; // "Choose the culprit" text
     public TextMeshProUGUI finalText; // Final NPC selection text
     public GameObject darkPanel; // The dark panel
-    public Button resetButton; // Reset button
     public GameObject uiToHide; // Specific UI element to hide
     public float delayBeforePause = 1f;
 
@@ -32,14 +31,12 @@ public class ResolutionManager : MonoBehaviour
         darkPanel.SetActive(false);
         resolutionText.gameObject.SetActive(false);
         finalText.gameObject.SetActive(false);
-        resetButton.gameObject.SetActive(false);
 
         if (uiToHide != null)
         {
             uiToHide.SetActive(true); // Ensure the UI element is visible at the start
         }
 
-        resetButton.onClick.AddListener(ResetGame);
     }
 
     void Update()
@@ -106,7 +103,6 @@ public class ResolutionManager : MonoBehaviour
         // Show the panel, final text, and reset button
         darkPanel.SetActive(true);
         finalText.gameObject.SetActive(true);
-        resetButton.gameObject.SetActive(true);
 
         // Ensure the text starts empty
         finalText.text = "";
@@ -153,23 +149,5 @@ public class ResolutionManager : MonoBehaviour
         }
     }
 
-    private void ResetGame()
-    {
-        Time.timeScale = 1f;
-        // Reset music to the original track
-        if (musicManager != null)
-        {
-            musicManager.ResetMusic();
-        }
 
-        foreach (var obj in FindObjectsOfType<GameObject>())
-        {
-            if (obj.scene.name == null) // Objects not part of the current scene
-            {
-                Destroy(obj);
-            }
-        }
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 }

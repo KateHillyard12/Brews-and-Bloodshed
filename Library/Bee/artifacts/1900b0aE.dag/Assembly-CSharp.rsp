@@ -336,6 +336,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Boxophobic.SkyboxCubemapExtended.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Boxophobic.Utils.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Boxophobic.Utils.Scripts.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.2D.Sprite.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Burst.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Burst.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.EditorCoroutines.Editor.ref.dll"

@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement; // For resetting the scene
 
 public class PauseMenu : MonoBehaviour
 {
@@ -10,60 +10,111 @@ public class PauseMenu : MonoBehaviour
     public GameObject howToPlayUI;
     public Button firstButton;
     public bool isPaused = false;
+    
     private PlayerInput playerInput;
     private EventSystem eventSystem;
     private Vector2 navigationInput;
     private int selectedButtonIndex = 0;
     private Button[] menuButtons;
+    private MovementScript playerMovement;
+    private Vector3 defaultButtonScale = new Vector3(0.4f, 0.4f, 0f);
+    private Vector3 highlightedButtonScale = new Vector3(0.5f, 0.5f, 0f);
+
+    private MusicManager musicManager;
+
 
     private void Awake()
     {
-        playerInput = FindObjectOfType<PlayerInput>(); // Get existing input system
+        playerInput = FindObjectOfType<PlayerInput>(); // Use existing PlayerInput
         eventSystem = EventSystem.current;
+        playerMovement = FindObjectOfType<MovementScript>();
+        pauseMenuUI.SetActive(false); // Ensure the menu starts hidden
+        Cursor.lockState = CursorLockMode.Locked; // Keep cursor locked
     }
 
     private void Start()
     {
+        musicManager = FindObjectOfType<MusicManager>();
         menuButtons = pauseMenuUI.GetComponentsInChildren<Button>();
-    }
-
-    private void OnEnable()
-    {
-        Debug.Log("Pause Menu enabled");
-        playerInput.actions["Pause"].performed += _ => TogglePauseMenu();
-        playerInput.actions["Navigate"].performed += ctx => navigationInput = ctx.ReadValue<Vector2>();
-        playerInput.actions["Cancel"].performed += _ => ResumeGame();
-        playerInput.actions["Submit"].performed += _ => SelectButton();
-    }
-
-    private void OnDisable()
-    {
-        playerInput.actions["Pause"].performed -= _ => TogglePauseMenu();
-        playerInput.actions["Navigate"].performed -= ctx => navigationInput = ctx.ReadValue<Vector2>();
-        playerInput.actions["Cancel"].performed -= _ => ResumeGame();
-        playerInput.actions["Submit"].performed -= _ => SelectButton();
-    }
-
-    private void Update()
-    {
-        if (isPaused)
+        if (menuButtons.Length > 0)
         {
+            selectedButtonIndex = 0;
+        }
+        else
+        {
+            Debug.LogError("PauseMenu: No buttons found in menu UI!");
+        }
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.performed && !playerMovement.isResolutionActive)
+        {
+            TogglePauseMenu();
+        }
+    }
+
+    public void OnNavigate(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            navigationInput = context.ReadValue<Vector2>();
             HandleNavigation();
+        }
+    }
+
+    public void OnSubmit(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            SelectButton();
+        }
+    }
+
+    public void OnCancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ResumeGame();
         }
     }
 
     private void HandleNavigation()
     {
+        if (menuButtons == null || menuButtons.Length == 0) return; // Prevent out-of-bounds error
+
+        int previousIndex = selectedButtonIndex;
+        
         if (navigationInput.y > 0.5f)
         {
-            selectedButtonIndex = Mathf.Max(0, selectedButtonIndex - 1);
+            selectedButtonIndex = (selectedButtonIndex - 1 + menuButtons.Length) % menuButtons.Length;
         }
         else if (navigationInput.y < -0.5f)
         {
-            selectedButtonIndex = Mathf.Min(menuButtons.Length - 1, selectedButtonIndex + 1);
+            selectedButtonIndex = (selectedButtonIndex + 1) % menuButtons.Length;
         }
         
-        eventSystem.SetSelectedGameObject(menuButtons[selectedButtonIndex].gameObject);
+        if (previousIndex != selectedButtonIndex)
+        {
+            ResetButtonTransforms(); // Reset all buttons before applying effect
+            eventSystem.SetSelectedGameObject(menuButtons[selectedButtonIndex].gameObject);
+            HighlightButton(menuButtons[selectedButtonIndex]);
+        }
+    }
+
+    private void HighlightButton(Button button)
+    {
+        RectTransform rect = button.GetComponent<RectTransform>();
+        rect.localScale = highlightedButtonScale; // Make button appear larger (jumping out effect)
+    }
+
+    private void ResetButtonTransforms()
+    {
+        foreach (Button btn in menuButtons)
+        {
+            RectTransform rect = btn.GetComponent<RectTransform>();
+            rect.localScale = defaultButtonScale;
+        }
     }
 
     private void SelectButton()
@@ -76,22 +127,24 @@ public class PauseMenu : MonoBehaviour
         isPaused = !isPaused;
         pauseMenuUI.SetActive(isPaused);
         Time.timeScale = isPaused ? 0f : 1f;
-        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked; // Keep cursor locked
 
         if (isPaused)
         {
-            playerInput.SwitchCurrentActionMap("UI"); // Switch to UI action map
+            playerInput.SwitchCurrentActionMap("UI");
             if (menuButtons.Length > 0)
             {
-                eventSystem.SetSelectedGameObject(menuButtons[0].gameObject);
+                selectedButtonIndex = 0;
+                ResetButtonTransforms(); // Reset all button sizes and positions
+                eventSystem.SetSelectedGameObject(menuButtons[selectedButtonIndex].gameObject);
+                HighlightButton(menuButtons[selectedButtonIndex]);
             }
         }
         else
         {
-            playerInput.SwitchCurrentActionMap("Player"); // Switch back to Player controls
+            playerInput.SwitchCurrentActionMap("Player");
         }
     }
-
 
     public void ResumeGame()
     {
@@ -99,12 +152,32 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
-        playerInput.SwitchCurrentActionMap("Player"); // Resume player control
+        playerInput.SwitchCurrentActionMap("Player");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        // Reset music to the original track
+        if (musicManager != null)
+        {
+            musicManager.ResetMusic();
+        }
+
+        foreach (var obj in FindObjectsOfType<GameObject>())
+        {
+            if (obj.scene.name == null) // Objects not part of the current scene
+            {
+                Destroy(obj);
+            }
+        }
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ShowHowToPlay()
