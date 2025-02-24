@@ -1,33 +1,54 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MovementScript : MonoBehaviour
 {
     public float moveSpeed = 5f;
+
+    [Header("Sensitivity Settings")]
     public float mouseSensitivity = 200f;
-    public bool isResolutionActive = false; // Flag to check if resolution is active
+    public float controllerSensitivity = 2.5f;
+
+    public bool isResolutionActive = false;
     private Rigidbody rb;
     private Transform playerCamera;
 
     private float verticalRotation = 0f;
-
-    // Resolution phase camera settings
     public Vector3 resolutionCameraPosition = new Vector3(0f, 5.2f, 6.05f);
+    private bool isTransitioning = false;
+    private bool isNPCSelected = false;
 
-    private bool isTransitioning = false; // Track if camera is transitioning
-    private bool isNPCSelected = false; // Flag to prevent further actions after selection
+    public Transform[] npcFocusPoints;
+    private int currentFocusIndex = 1;
+    private NPC currentFocusedNPC;
 
-    public Transform[] npcFocusPoints; // Array of positions to focus on each NPC
-    private int currentFocusIndex = 1; // Start by looking at the center NPC (index 1)
-    private NPC currentFocusedNPC; // Track currently focused NPC
+    private Vector2 moveInput;
+    private Vector2 lookInput;
+    private bool isUsingController = false;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true; // Disable physics-based rotation
+        rb.freezeRotation = true;
         playerCamera = Camera.main.transform;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
-        Cursor.lockState = CursorLockMode.Locked; // Lock cursor at game start
+    private void FixedUpdate()
+    {
+        if (!isResolutionActive) // Disable movement when in resolution phase
+        {
+            HandlePlayerMovement();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!isResolutionActive) // Disable normal camera movement during resolution phase
+        {
+            HandleCameraRotation();
+        }
     }
 
     private void Update()
@@ -36,85 +57,120 @@ public class MovementScript : MonoBehaviour
         {
             if (!isTransitioning)
             {
-                // Transition camera to resolution position
                 isTransitioning = true;
                 StartCoroutine(SmoothCameraTransition(resolutionCameraPosition, 2f));
             }
             else
             {
-                HandleFocusSwitching(); // Allow player to switch focus between NPCs
+                HandleFocusSwitching(); // Enable focus controls
 
-                // Handle NPC selection
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Gamepad.current != null) // Controller input check
                 {
-                    if (currentFocusedNPC != null)
+                    if (Gamepad.current.buttonSouth.wasPressedThisFrame) // "A" button
                     {
-                        isNPCSelected = true; // Prevent further focus or selection
-                        currentFocusedNPC.SelectNPC(); // Mark the NPC as selected
+                        SelectCurrentNPC();
                     }
+                }
+                else if (Keyboard.current.qKey.wasPressedThisFrame) // Keyboard input check
+                {
+                    SelectCurrentNPC();
                 }
             }
         }
-        else if (!isResolutionActive)
-        {
-            HandlePlayerMovement(); // Enable normal movement
-            HandleCameraRotation(); // Normal camera rotation
-        }
     }
 
-    void HandlePlayerMovement()
+    private void HandlePlayerMovement()
     {
-        // Player Movement
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
-        Vector3 moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        Vector3 moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
         rb.velocity = moveDirection.normalized * moveSpeed;
     }
 
-    void HandleCameraRotation()
+    private void HandleCameraRotation()
     {
-        // Standard camera rotation for normal gameplay
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float sensitivity = isUsingController ? controllerSensitivity : mouseSensitivity;
+
+        float mouseX = lookInput.x * sensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * sensitivity * Time.deltaTime;
 
         verticalRotation -= mouseY;
-        verticalRotation = Mathf.Clamp(verticalRotation, -70f, 70f); // Prevent extreme up/down
+        verticalRotation = Mathf.Clamp(verticalRotation, -70f, 70f);
 
         playerCamera.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
     }
 
-    void HandleFocusSwitching()
+    public void OnMove(InputAction.CallbackContext context)
     {
-        // Check for left/right input to switch focus
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        lookInput = context.ReadValue<Vector2>();
+        isUsingController = context.control.device is Gamepad;
+    }
+
+    public void OnFocusLeft(InputAction.CallbackContext context)
+    {
+        if (isResolutionActive && context.performed)
         {
-            ChangeFocus(1); // Move focus left
-        }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            ChangeFocus(-1); // Move focus right
+            ChangeFocus(1);
         }
     }
 
-    void ChangeFocus(int direction)
+    public void OnFocusRight(InputAction.CallbackContext context)
+    {
+        if (isResolutionActive && context.performed)
+        {
+            ChangeFocus(-1);
+        }
+    }
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            FindObjectOfType<PauseMenu>().TogglePauseMenu();
+        }
+    }
+
+
+    private void HandleFocusSwitching()
+    {
+        if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.leftArrowKey.wasPressedThisFrame ||
+            Gamepad.current?.buttonWest.wasPressedThisFrame == true) // "X" Button on Controller
+        {
+            ChangeFocus(1); // Move left
+        }
+        else if (Keyboard.current.dKey.wasPressedThisFrame || Keyboard.current.rightArrowKey.wasPressedThisFrame ||
+                 Gamepad.current?.buttonEast.wasPressedThisFrame == true) // "B" Button on Controller
+        {
+            ChangeFocus(-1); // Move right
+        }
+    }
+
+    private void SelectCurrentNPC()
+    {
+        if (currentFocusedNPC != null)
+        {
+            isNPCSelected = true;
+            currentFocusedNPC.SelectNPC();
+        }
+    }
+
+    private void ChangeFocus(int direction)
     {
         int newFocusIndex = Mathf.Clamp(currentFocusIndex + direction, 0, npcFocusPoints.Length - 1);
 
         if (newFocusIndex != currentFocusIndex)
         {
-            // Reset the previous NPC's material
             if (currentFocusedNPC != null)
             {
                 currentFocusedNPC.ResetMaterial();
             }
 
-            // Update focus index and look at the new NPC
             currentFocusIndex = newFocusIndex;
             StartCoroutine(SmoothFocusTransition(npcFocusPoints[currentFocusIndex], 0.5f));
 
-            // Update the currentFocusedNPC
             currentFocusedNPC = npcFocusPoints[currentFocusIndex].parent.GetComponent<NPC>();
             if (currentFocusedNPC != null)
             {
@@ -131,7 +187,7 @@ public class MovementScript : MonoBehaviour
 
         for (float t = 0; t < 1; t += Time.deltaTime / duration)
         {
-            playerCamera.position = resolutionCameraPosition; // Lock position to resolution camera position
+            playerCamera.position = resolutionCameraPosition;
             playerCamera.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
             yield return null;
         }
@@ -150,8 +206,6 @@ public class MovementScript : MonoBehaviour
         }
 
         playerCamera.position = targetPosition;
-
-        // Allow focus switching once transition completes
         isTransitioning = false;
     }
 }

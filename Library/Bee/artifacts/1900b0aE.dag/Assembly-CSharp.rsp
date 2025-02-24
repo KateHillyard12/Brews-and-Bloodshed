@@ -117,6 +117,7 @@
 -define:ENABLE_TERRAIN
 -define:ENABLE_TILEMAP
 -define:ENABLE_TIMELINE
+-define:ENABLE_INPUT_SYSTEM
 -define:ENABLE_LEGACY_INPUT_MANAGER
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
@@ -338,6 +339,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Burst.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Burst.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.EditorCoroutines.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aE.dag/Unity.InputSystem.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Mathematics.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Mathematics.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.Performance.Profile-Analyzer.Editor.ref.dll"
@@ -395,6 +397,7 @@
 "Assets/Scripts/MachineScripts/MachineType.cs"
 "Assets/Scripts/MachineScripts/MachineTypeDisplay.cs"
 "Assets/Scripts/MusicManager.cs"
+"Assets/Scripts/PauseMenu.cs"
 "Assets/Scripts/PlayerScripts/MovementScript.cs"
 "Assets/Scripts/PlayerScripts/PlayerPickUpDrop.cs"
 "Assets/Scripts/ResolutionManager.cs"

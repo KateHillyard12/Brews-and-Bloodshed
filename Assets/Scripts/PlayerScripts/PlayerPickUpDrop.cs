@@ -1,30 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem; // Import New Input System
 
 public class PlayerPickUpDrop : MonoBehaviour
 {
-
     [SerializeField] private Transform playerCameraTransform;
     [SerializeField] private Transform objectGrabPointTransform;
     [SerializeField] private LayerMask pickupLayerMask;
     private ObjectGrabbable objectGrabbable;
 
-
-   private void Update(){
-        if(Input.GetKeyDown(KeyCode.E)){
-            if(objectGrabbable == null){
+    public void OnPickUpDrop(InputAction.CallbackContext context)
+    {
+        if (context.performed) // Ensures action triggers only once per press
+        {
+            if (objectGrabbable == null)
+            {
                 // Code for picking up the object
                 float pickupDistance = 8f;
-                if(Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit raycastHit, pickupDistance, pickupLayerMask)){
+                if (Physics.Raycast(playerCameraTransform.position, playerCameraTransform.forward, out RaycastHit raycastHit, pickupDistance, pickupLayerMask))
+                {
                     Debug.Log("Hit: " + raycastHit.transform.name);
-                    if(raycastHit.transform.TryGetComponent(out ObjectGrabbable grabbedObject)){
+                    if (raycastHit.transform.TryGetComponent(out ObjectGrabbable grabbedObject))
+                    {
                         grabbedObject.Grab(objectGrabPointTransform);
                         objectGrabbable = grabbedObject;
                         Debug.Log("ObjectGrabbable");
                     }
                 }
-            } else {
+            }
+            else
+            {
                 // Code for dropping the object
                 objectGrabbable.Drop();
                 objectGrabbable = null;
