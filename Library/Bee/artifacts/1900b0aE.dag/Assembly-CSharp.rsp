@@ -389,6 +389,7 @@
 "Assets/Scripts/AIScripts/PlayerInteract.cs"
 "Assets/Scripts/DataManager.cs"
 "Assets/Scripts/InteractiveObjectScripts/MugSnapper.cs"
+"Assets/Scripts/InteractiveObjectScripts/MugSoundPlayer.cs"
 "Assets/Scripts/InteractiveObjectScripts/MugState.cs"
 "Assets/Scripts/InteractiveObjectScripts/ObjectGrabbable.cs"
 "Assets/Scripts/InteractiveObjectScripts/RespawnOnCollision.cs"

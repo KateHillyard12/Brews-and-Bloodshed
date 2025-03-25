@@ -7,8 +7,7 @@ public class NPCInteractable : MonoBehaviour
     public GameObject textPrefab; // UI Text prefab for chat bubbles
     public Transform canvasTransform; // Canvas where chat bubbles are displayed
     public Camera mainCamera; // Reference to the camera
-    public AudioClip talkingSound; // Talking sound
-    private AudioSource audioSource; // Reference to AudioSource
+    [SerializeField] private AudioSource audioSource; // Reference to AudioSource
 
     [SerializeField] private List<string> desiredIngredients; // Ingredients NPC expects
     [SerializeField] private string correctResponse; // Response for correct order
@@ -53,10 +52,6 @@ public class NPCInteractable : MonoBehaviour
                 interactTexts = new string[] { "This place is adorable!", "I'll have a coffee with milk and caramel syrup pretty please!" };
                 break;
         }
-
-        // Initialize AudioSource
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = talkingSound;
     }
 
     public void Interact()
@@ -74,6 +69,7 @@ public class NPCInteractable : MonoBehaviour
         {
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
             Debug.Log($"NPC {name} says: {lastResponse}");
+            PlayInteractionSound();
         }
         else
         {
@@ -92,7 +88,7 @@ public class NPCInteractable : MonoBehaviour
             lastResponse = isOrderCorrect ? correctResponse : incorrectResponse;
 
             ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
-            audioSource.PlayOneShot(talkingSound);
+            PlayInteractionSound();
 
             Debug.Log($"NPC {name} says: {lastResponse}");
             HasReceivedMug = true;
@@ -150,9 +146,17 @@ public class NPCInteractable : MonoBehaviour
         foreach (var text in dialogueTexts)
         {
             ChatBubble.Create(canvasTransform, text, textPrefab, mainCamera, transform);
-            audioSource.PlayOneShot(talkingSound);
+            PlayInteractionSound();
             yield return new WaitForSeconds(3f); // Wait before showing the next text
         }
         isDisplayingText = false; // Reset flag after dialogue ends
+    }
+
+    private void PlayInteractionSound()
+    {
+        if (audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
     }
 }

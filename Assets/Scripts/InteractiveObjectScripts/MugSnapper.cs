@@ -8,6 +8,8 @@ public class MugSnapper : MonoBehaviour
     private Dictionary<MachineType, Color> ingredientColors;
     private List<string> ingredients = new List<string>(); // List to store added ingredients
 
+    [SerializeField] private AudioSource coffeeMachineAudioSource;
+
     private void Awake()
     {
         ingredientColors = new Dictionary<MachineType, Color>
@@ -53,6 +55,12 @@ public class MugSnapper : MonoBehaviour
                 if (ingredientColors.TryGetValue(currentSnapPoint.machineType, out Color ingredientColor))
                 {
                     AddIngredient(currentSnapPoint.machineType.ToString(), ingredientColor);
+
+                    // Play sound if it's a coffee machine
+                    if (currentSnapPoint.machineType == MachineType.Coffee && coffeeMachineAudioSource != null)
+                    {
+                        coffeeMachineAudioSource.Play();
+                    }
                 }
             }
             else if (currentSnapPoint.CompareTag("NPC"))

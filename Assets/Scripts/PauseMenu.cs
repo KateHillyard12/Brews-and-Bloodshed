@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -17,8 +18,8 @@ public class PauseMenu : MonoBehaviour
     private int selectedButtonIndex = 0;
     private Button[] menuButtons;
     private MovementScript playerMovement;
-    private Vector3 defaultButtonScale = new Vector3(0.4f, 0.4f, 0f);
-    private Vector3 highlightedButtonScale = new Vector3(0.5f, 0.5f, 0f);
+    private Vector3 defaultButtonScale = new Vector3(0.3f, 0.3f, 0f);
+    private Vector3 highlightedButtonScale = new Vector3(0.4f, 0.4f, 0f);
 
     private MusicManager musicManager;
 
@@ -29,6 +30,7 @@ public class PauseMenu : MonoBehaviour
         eventSystem = EventSystem.current;
         playerMovement = FindObjectOfType<MovementScript>();
         pauseMenuUI.SetActive(false); // Ensure the menu starts hidden
+        howToPlayUI.SetActive(false); // Ensure the how to play UI starts hidden
         Cursor.lockState = CursorLockMode.Locked; // Keep cursor locked
     }
 
@@ -124,18 +126,31 @@ public class PauseMenu : MonoBehaviour
 
     public void TogglePauseMenu()
     {
+        if (pauseMenuUI == null)
+        {
+            Debug.LogError("PauseMenuUI is null! Attempting to find it again...");
+            pauseMenuUI = GameObject.Find("PauseMenuUI");
+
+            if (pauseMenuUI == null)
+            {
+                Debug.LogError("PauseMenuUI could not be found. Aborting pause toggle.");
+                return;
+            }
+        }
+
         isPaused = !isPaused;
         pauseMenuUI.SetActive(isPaused);
         Time.timeScale = isPaused ? 0f : 1f;
-        Cursor.lockState = CursorLockMode.Locked; // Keep cursor locked
+        Cursor.lockState = CursorLockMode.Locked;
 
         if (isPaused)
         {
             playerInput.SwitchCurrentActionMap("UI");
-            if (menuButtons.Length > 0)
+
+            if (menuButtons != null && menuButtons.Length > 0)
             {
                 selectedButtonIndex = 0;
-                ResetButtonTransforms(); // Reset all button sizes and positions
+                ResetButtonTransforms();
                 eventSystem.SetSelectedGameObject(menuButtons[selectedButtonIndex].gameObject);
                 HighlightButton(menuButtons[selectedButtonIndex]);
             }
@@ -146,10 +161,12 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+
     public void ResumeGame()
     {
         isPaused = false;
         pauseMenuUI.SetActive(false);
+        howToPlayUI.SetActive(false);
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         playerInput.SwitchCurrentActionMap("Player");
@@ -159,26 +176,45 @@ public class PauseMenu : MonoBehaviour
     {
         Application.Quit();
     }
-
+    
     public void RestartGame()
     {
         Time.timeScale = 1f;
-        // Reset music to the original track
+
         if (musicManager != null)
         {
             musicManager.ResetMusic();
         }
 
-        foreach (var obj in FindObjectsOfType<GameObject>())
-        {
-            if (obj.scene.name == null) // Objects not part of the current scene
-            {
-                Destroy(obj);
-            }
-        }
+        // Start the reinitialization process after the scene reloads
+        StartCoroutine(ReinitializeUI());
 
+        // Reload the scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    private IEnumerator ReinitializeUI()
+    {
+        yield return new WaitForSeconds(0.1f); // Small delay to ensure objects are reloaded
+
+        pauseMenuUI = GameObject.Find("PauseMenuUI"); // Find the UI again
+        howToPlayUI = GameObject.Find("HowToPlayUI"); // Find the "How to Play" UI
+
+        if (pauseMenuUI == null)
+        {
+            Debug.LogError("PauseMenuUI is missing after scene reload!");
+            yield break; // Stop execution if UI is missing
+        }
+
+        menuButtons = pauseMenuUI.GetComponentsInChildren<Button>();
+        eventSystem = EventSystem.current; // Ensure EventSystem is reassigned
+
+        if (menuButtons.Length > 0)
+        {
+            selectedButtonIndex = 0;
+        }
+    }
+
 
     public void ShowHowToPlay()
     {
