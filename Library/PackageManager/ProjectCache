@@ -403,6 +403,7 @@ m_ResolvedPackages:
     - 3.0.28
     - 3.0.31
     - 3.0.34
+    - 3.0.35
     compatible:
     - 3.0.16
     - 3.0.17
@@ -417,7 +418,8 @@ m_ResolvedPackages:
     - 3.0.28
     - 3.0.31
     - 3.0.34
-    verified: 3.0.34
+    - 3.0.35
+    verified: 3.0.35
   dependencies:
   - name: com.unity.ext.nunit
     version: 1.0.6
@@ -671,6 +673,7 @@ m_ResolvedPackages:
     - 1.12.0
     - 1.13.0
     - 1.13.1
+    - 1.14.0
     compatible:
     - 1.4.4
     - 1.5.0
@@ -691,6 +694,7 @@ m_ResolvedPackages:
     - 1.12.0
     - 1.13.0
     - 1.13.1
+    - 1.14.0
     verified: 1.4.4
   dependencies:
   - name: com.unity.modules.uielements
@@ -812,12 +816,14 @@ m_ResolvedPackages:
     - 5.2.0
     - 5.2.2
     - 5.2.3
+    - 5.2.4
     - 6.0.1-pre.1
     - 6.0.1-pre.2
     - 6.0.1
     - 6.0.2
     - 6.0.3
     - 6.0.4
+    - 6.0.5
     compatible:
     - 5.0.3
     - 5.0.4
@@ -828,6 +834,7 @@ m_ResolvedPackages:
     - 5.2.0
     - 5.2.2
     - 5.2.3
+    - 5.2.4
     verified: 5.0.7
   dependencies:
   - name: com.unity.modules.imgui
@@ -1365,6 +1372,7 @@ m_ResolvedPackages:
     - 3.2.0-pre.9
     - 3.2.0-pre.10
     - 3.2.0-pre.11
+    - 3.2.0-pre.12
     - 4.0.0-pre.1
     - 4.0.0-pre.2
     compatible:
@@ -1383,6 +1391,7 @@ m_ResolvedPackages:
     - 3.2.0-pre.9
     - 3.2.0-pre.10
     - 3.2.0-pre.11
+    - 3.2.0-pre.12
     verified: 3.0.9
   dependencies:
   - name: com.unity.ugui
@@ -1520,6 +1529,7 @@ m_ResolvedPackages:
     - 1.7.4
     - 1.7.5
     - 1.7.6
+    - 1.7.7
     - 1.8.0
     - 1.8.1
     - 1.8.2
@@ -1541,6 +1551,7 @@ m_ResolvedPackages:
     - 1.7.4
     - 1.7.5
     - 1.7.6
+    - 1.7.7
     - 1.8.0
     - 1.8.1
     - 1.8.2
@@ -1708,12 +1719,14 @@ m_ResolvedPackages:
     - 1.7.6
     - 1.7.7
     - 1.7.8
+    - 1.8.0-pre.1
     - 1.8.0
     - 1.9.0
     - 1.9.1
     - 1.9.2
     - 1.9.4
     - 1.9.5
+    - 1.9.6
     compatible:
     - 1.7.8
     - 1.8.0
@@ -1722,6 +1735,7 @@ m_ResolvedPackages:
     - 1.9.2
     - 1.9.4
     - 1.9.5
+    - 1.9.6
     verified: 1.7.8
   dependencies:
   - name: com.unity.ugui
