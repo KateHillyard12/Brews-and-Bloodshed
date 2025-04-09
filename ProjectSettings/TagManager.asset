@@ -21,6 +21,7 @@ TagManager:
   - CooldownUI
   - NPC
   - Machine
+  - Liquid
   layers:
   - Default
   - TransparentFX

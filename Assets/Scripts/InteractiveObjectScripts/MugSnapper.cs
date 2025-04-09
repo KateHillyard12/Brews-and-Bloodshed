@@ -97,9 +97,14 @@ public class MugSnapper : MonoBehaviour
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         foreach (Renderer renderer in renderers)
         {
-            renderer.material.color = currentColor;
+            if (renderer.gameObject.name == "Liquid") 
+            {
+                renderer.material.color = currentColor;
+            }
         }
     }
+
+
 
     public List<string> GetIngredients()
     {
