@@ -1,49 +1,60 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-
 public class StartScreenController : MonoBehaviour
 {
-    public GameObject startScreen;
-    public Animator imageAnimator;
-    public Animator buttonAnimator;
-    public Button startButton;
+    public VideoPlayer videoPlayer;
+    public InputActionAsset inputActions; // assign in inspector
+    private InputAction anyInputAction;
+
+    private bool inputAllowed = false;
 
     void Start()
     {
-        // Optionally, disable the start button initially
-        startButton.gameObject.SetActive(false);
+        // Hook up video finished event
+        videoPlayer.loopPointReached += OnVideoFinished;
 
-        // Start the animations for the image and button
-        StartCoroutine(ShowStartScreen());
+        // Hook up prepare completed event
+        videoPlayer.prepareCompleted += OnVideoPrepared;
+
+        // Prepare the video (preload)
+        videoPlayer.Prepare();
+
+        // Get the input action
+        anyInputAction = inputActions.FindAction("anyInput");
+        anyInputAction.performed += OnAnyInput;
+        anyInputAction.Enable();
     }
 
-    private IEnumerator ShowStartScreen()
+    private void OnVideoPrepared(VideoPlayer vp)
     {
-        // Play the image slide-in animation
-        imageAnimator.Play("ImageSlideIn");
-
-        // Wait for the image animation to finish (adjust timing as needed)
-        yield return new WaitForSeconds(1.5f);
-
-        // Play the button slide-in animation
-        buttonAnimator.Play("ButtonSlideIn");
-
-        // Show the start button after animation
-        startButton.gameObject.SetActive(true);
-
-        // Wait for the button press to start the game
-        startButton.onClick.AddListener(OnStartButtonClicked);
+        Debug.Log("Video prepared, starting playback.");
+        videoPlayer.Play();
     }
 
-    private void OnStartButtonClicked()
-    {
-        // Start the game (load the next scene)
-        SceneManager.LoadScene("Brews and Bloodshed");
 
-        // Optionally, disable the start screen before transitioning (if not handled by scene)
-        startScreen.SetActive(false);
+    private void OnVideoFinished(VideoPlayer vp)
+    {
+        inputAllowed = true;
+        Debug.Log("Video finished! Waiting for player input...");
+    }
+
+    private void OnAnyInput(InputAction.CallbackContext context)
+    {
+        if (inputAllowed)
+        {
+            Debug.Log("Input detected. Loading main scene...");
+            SceneManager.LoadScene("Brews and Bloodshed");
+        }
+    }
+
+    void OnDestroy()
+    {
+        anyInputAction.performed -= OnAnyInput;
+        anyInputAction.Disable();
     }
 }

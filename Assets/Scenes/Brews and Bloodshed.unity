@@ -905,7 +905,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &404654766
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3625,6 +3625,7 @@ GameObject:
   - component: {fileID: 1286744453}
   - component: {fileID: 1286744455}
   - component: {fileID: 1286744454}
+  - component: {fileID: 1286744456}
   m_Layer: 5
   m_Name: Panel (1)
   m_TagString: Untagged
@@ -3690,6 +3691,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286744452}
   m_CullTransparentMesh: 1
+--- !u!328 &1286744456
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286744452}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: 9ffa45864939f5b49814fa61f44765dd, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 2
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: 
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
 --- !u!1 &1359711792
 GameObject:
   m_ObjectHideFlags: 0
@@ -3853,7 +3889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1363543902
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6156,6 +6192,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d8988cd0-241b-4a8d-b2e2-8ab3e6867c64
     m_ActionName: UI/Navigate[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d6827bc6-9b76-467d-a702-75accca8251c
+    m_ActionName: StartScreen/anyInput[/Keyboard/anyKey,/Mouse/rightButton,/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
