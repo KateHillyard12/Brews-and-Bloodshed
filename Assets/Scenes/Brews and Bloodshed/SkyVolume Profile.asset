@@ -58,12 +58,12 @@ MonoBehaviour:
     m_Value: 1
   upperHemisphereLuxValue:
     m_OverrideState: 1
-    m_Value: 1.7998586
+    m_Value: 2.3847945
   upperHemisphereLuxColor:
     m_OverrideState: 1
-    m_Value: {x: 0.5, y: 0.33563656, z: 0.3267425}
+    m_Value: {x: 0.5, y: 0.34702706, z: 0.34720084}
   desiredLuxValue:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 20000
   updateMode:
     m_OverrideState: 1
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Value: {fileID: 8900000, guid: 4888d953df42ab94181326e5158f5991, type: 3}
   distortionMode:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 2
   flowmap:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -183,7 +183,7 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 1
   meteringMode:
     m_OverrideState: 1
     m_Value: 0
@@ -198,10 +198,10 @@ MonoBehaviour:
     m_Value: 0
   limitMin:
     m_OverrideState: 1
-    m_Value: -0.2452834
+    m_Value: -0.4339625
   limitMax:
     m_OverrideState: 1
-    m_Value: 14.283017
+    m_Value: 13.603772
   curveMap:
     m_OverrideState: 0
     m_Value:
