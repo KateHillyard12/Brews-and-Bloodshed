@@ -404,6 +404,7 @@
 "Assets/Scripts/PlayerScripts/PlayerPickUpDrop.cs"
 "Assets/Scripts/ResolutionManager.cs"
 "Assets/StartScreen/StartScreenController.cs"
+"Assets/VFX/MachinePourParticles.cs"
 -langversion:9.0
 
 /deterministic
