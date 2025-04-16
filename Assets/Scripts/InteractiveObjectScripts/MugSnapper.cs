@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
+
 
 public class MugSnapper : MonoBehaviour
 {
     private SnapPoint currentSnapPoint = null;
     private Color currentColor = Color.white; // Default mug color
     private Dictionary<MachineType, Color> ingredientColors;
-    private List<string> ingredients = new List<string>(); // List to store added ingredients
+    private List<string> ingredients = new List<string>();
+    [SerializeField] private VisualEffect steamVFX;
+
+
 
     [SerializeField] private AudioSource coffeeMachineAudioSource;
 
@@ -22,6 +27,11 @@ public class MugSnapper : MonoBehaviour
         };
 
         UpdateMugColor();
+        
+        if (steamVFX != null)
+        {
+            steamVFX.Stop(); // Prevent auto-play
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,6 +61,11 @@ public class MugSnapper : MonoBehaviour
 
             if (currentSnapPoint.CompareTag("Machine"))
             {
+                PourEffectController pourEffect = currentSnapPoint.GetComponent<PourEffectController>();
+                if (pourEffect != null)
+                {
+                    pourEffect.StartPouring();
+                }
                 // Machine interaction: add ingredient and update color
                 if (ingredientColors.TryGetValue(currentSnapPoint.machineType, out Color ingredientColor))
                 {
@@ -82,6 +97,12 @@ public class MugSnapper : MonoBehaviour
     {
         // Add the ingredient to the list
         ingredients.Add(ingredientName);
+
+        if (ingredientName == "Coffee" && steamVFX != null)
+        {
+            steamVFX.Play();
+        }
+
 
         // Update the mug's color (mix the color)
         currentColor = Color.Lerp(currentColor, ingredientColor, 0.5f);
@@ -117,5 +138,10 @@ public class MugSnapper : MonoBehaviour
         currentColor = Color.white;
         UpdateMugColor();
         Debug.Log("MugSnapper reset: ingredients cleared, color reset.");
+        if (steamVFX != null)
+        {
+            steamVFX.Stop();
+        }
+
     }
 }

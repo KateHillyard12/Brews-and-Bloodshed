@@ -398,13 +398,13 @@
 "Assets/Scripts/MachineScripts/MachineNameDisplay.cs"
 "Assets/Scripts/MachineScripts/MachineType.cs"
 "Assets/Scripts/MachineScripts/MachineTypeDisplay.cs"
+"Assets/Scripts/MachineScripts/PourEffectController.cs"
 "Assets/Scripts/MusicManager.cs"
 "Assets/Scripts/PauseMenu.cs"
 "Assets/Scripts/PlayerScripts/MovementScript.cs"
 "Assets/Scripts/PlayerScripts/PlayerPickUpDrop.cs"
 "Assets/Scripts/ResolutionManager.cs"
 "Assets/StartScreen/StartScreenController.cs"
-"Assets/VFX/MachinePourParticles.cs"
 -langversion:9.0
 
 /deterministic

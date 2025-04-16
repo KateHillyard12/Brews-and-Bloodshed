@@ -8,18 +8,21 @@ public class NPC : MonoBehaviour
     public Material hoverMaterial;
     public Material selectedMaterial;
 
-    private Renderer npcRenderer;
+    private Renderer[] npcRenderers;
+
     
     // Reference to ResolutionManager
     public ResolutionManager resolutionManager;
 
     private void Start()
     {
-        npcRenderer = GetComponent<Renderer>();
-        if (npcRenderer == null)
+        npcRenderers = GetComponentsInChildren<Renderer>(); // Add this line
+
+        if (npcRenderers.Length == 0)
         {
-            Debug.LogError("No Renderer found on NPC");
+            Debug.LogError("No renderers found on NPC or its children.");
         }
+
 
         // Optionally, you can find ResolutionManager dynamically if it's not assigned
         if (resolutionManager == null)
@@ -30,26 +33,33 @@ public class NPC : MonoBehaviour
 
     public void HoverMaterial()
     {
-        npcRenderer.material = hoverMaterial; // Apply hover material
+        foreach (Renderer renderer in npcRenderers)
+        {
+            renderer.material = hoverMaterial;
+        }
     }
 
     public void SelectNPC()
     {
-        if (npcRenderer != null)
+        foreach (Renderer renderer in npcRenderers)
         {
-            npcRenderer.material = selectedMaterial; // Set to selected material
-            Debug.Log($"{gameObject.name} selected!");
+            renderer.material = selectedMaterial;
+        }
 
-            // Call EndResolution from ResolutionManager when the NPC is selected
-            if (resolutionManager != null)
-            {
-                resolutionManager.EndResolution(this);  // Pass this NPC as the selected NPC
-            }
+        Debug.Log($"{gameObject.name} selected!");
+
+        if (resolutionManager != null)
+        {
+            resolutionManager.EndResolution(this);
         }
     }
 
     public void ResetMaterial()
     {
-        npcRenderer.material = defaultMaterial; // Reset to default material
+        foreach (Renderer renderer in npcRenderers)
+        {
+            renderer.material = defaultMaterial;
+        }
     }
+
 }
