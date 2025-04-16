@@ -22,6 +22,9 @@ public class NPCInteractable : MonoBehaviour
 
      private MovementScript playerMovementScript; // Reference to player movement script
 
+     private NPCIdleController idleController;
+
+
     private void Start()
     {
         if (mainCamera == null)
@@ -52,6 +55,10 @@ public class NPCInteractable : MonoBehaviour
                 interactTexts = new string[] { "This place is adorable!", "I'll have a coffee with milk and caramel syrup pretty please!" };
                 break;
         }
+        
+        idleController = GetComponentInParent<NPCIdleController>();
+
+
     }
 
     public void Interact()
@@ -79,22 +86,32 @@ public class NPCInteractable : MonoBehaviour
 
     public void ReceiveMug(GameObject mug)
     {
-        Debug.Log($"NPC {name} received the mug.");
+        Debug.Log($"[RECEIVE] {name} received a mug.");
+        
         MugSnapper mugSnapper = mug.GetComponent<MugSnapper>();
-
-        if (mugSnapper != null)
+        if (mugSnapper == null)
         {
-            bool isOrderCorrect = CheckIngredients(mugSnapper);
-            lastResponse = isOrderCorrect ? correctResponse : incorrectResponse;
+            Debug.LogWarning("MugSnapper not found on mug.");
+            return;
+        }
 
-            ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
-            PlayInteractionSound();
+        bool isOrderCorrect = CheckIngredients(mugSnapper);
+        lastResponse = isOrderCorrect ? correctResponse : incorrectResponse;
 
-            Debug.Log($"NPC {name} says: {lastResponse}");
-            HasReceivedMug = true;
-            Debug.Log($"{name} has received their mug.");
+        ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
+        HasReceivedMug = true;
+
+        Debug.Log("Calling SwitchToMugPose...");
+        if (idleController != null)
+        {
+            idleController.SwitchToMugPose();
+        }
+        else
+        {
+            Debug.LogWarning("idleController is null!");
         }
     }
+
 
     private bool CheckIngredients(MugSnapper mugSnapper)
     {
