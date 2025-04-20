@@ -12,22 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8bcdf71d7fafa419fca1ed162f5fc9, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   postExposure:
     m_OverrideState: 0
     m_Value: 0
   contrast:
     m_OverrideState: 1
-    m_Value: 15
+    m_Value: 0
   colorFilter:
-    m_OverrideState: 0
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0.9027609, b: 0.85534585, a: 1}
   hueShift:
     m_OverrideState: 0
-    m_Value: 180
+    m_Value: -180
   saturation:
-    m_OverrideState: 0
-    m_Value: 100
+    m_OverrideState: 1
+    m_Value: 50
 --- !u!114 &-6565770712336101212
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -86,10 +86,10 @@ MonoBehaviour:
     m_Value: 1
   upperHemisphereLuxValue:
     m_OverrideState: 1
-    m_Value: 2.5551484
+    m_Value: 2.0005934
   upperHemisphereLuxColor:
     m_OverrideState: 1
-    m_Value: {x: 0.5, y: 0.3815326, z: 0.38097227}
+    m_Value: {x: 0.49779838, y: 0.3159265, z: 0.5}
   desiredLuxValue:
     m_OverrideState: 0
     m_Value: 20005.1
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f034cba68ab55e046ae1445a42f18c0e, type: 3}
   m_Name: IndirectLightingController
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   indirectDiffuseLightingMultiplier:
     m_OverrideState: 1
     m_Value: 0.5
@@ -201,13 +201,13 @@ MonoBehaviour:
     m_Value: 255
   reflectionLightingMultiplier:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.2
   reflectionLightingLayers:
     m_OverrideState: 0
     m_Value: 255
   reflectionProbeIntensityMultiplier:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
 --- !u!114 &-1453563382275205599
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   mode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   meteringMode:
     m_OverrideState: 0
@@ -291,16 +291,16 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 13.461537
+    m_Value: 13.4878025
   compensation:
     m_OverrideState: 0
     m_Value: -7.42
   limitMin:
-    m_OverrideState: 0
-    m_Value: -5
+    m_OverrideState: 1
+    m_Value: 6.99187
   limitMax:
     m_OverrideState: 1
-    m_Value: 13.646616
+    m_Value: 12.658538
   curveMap:
     m_OverrideState: 0
     m_Value:

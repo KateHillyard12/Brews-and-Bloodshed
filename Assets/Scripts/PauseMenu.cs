@@ -21,8 +21,6 @@ public class PauseMenu : MonoBehaviour
     private Vector3 defaultButtonScale = new Vector3(0.3f, 0.3f, 0f);
     private Vector3 highlightedButtonScale = new Vector3(0.4f, 0.4f, 0f);
 
-    private MusicManager musicManager;
-
 
     private void Awake()
     {
@@ -36,7 +34,6 @@ public class PauseMenu : MonoBehaviour
 
     private void Start()
     {
-        musicManager = FindObjectOfType<MusicManager>();
         menuButtons = pauseMenuUI.GetComponentsInChildren<Button>();
         if (menuButtons.Length > 0)
         {
@@ -123,7 +120,7 @@ public class PauseMenu : MonoBehaviour
     {
         menuButtons[selectedButtonIndex].onClick.Invoke();
     }
-
+    
     public void TogglePauseMenu()
     {
         if (pauseMenuUI == null)
@@ -145,6 +142,8 @@ public class PauseMenu : MonoBehaviour
 
         if (isPaused)
         {
+            MusicManager.Instance?.FadeOutAllMusic(0.75f);
+            MusicManager.Instance?.ApplyLowPass(true, 0.5f);
             playerInput.SwitchCurrentActionMap("UI");
 
             if (menuButtons != null && menuButtons.Length > 0)
@@ -157,9 +156,13 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
+            MusicManager.Instance?.FadeInAllMusic(0.75f);
+            MusicManager.Instance?.ApplyLowPass(false, 0.5f);
             playerInput.SwitchCurrentActionMap("Player");
         }
+
     }
+
 
 
     public void ResumeGame()
@@ -180,11 +183,6 @@ public class PauseMenu : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
-
-        if (musicManager != null)
-        {
-            musicManager.ResetMusic();
-        }
 
         // Start the reinitialization process after the scene reloads
         StartCoroutine(ReinitializeUI());

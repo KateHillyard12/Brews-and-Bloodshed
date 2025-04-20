@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic; // For List<>
+using System.Collections.Generic;
 using UnityEngine;
-using TMPro; // For TextMeshPro
-using UnityEngine.SceneManagement; // For resetting the scene
-using UnityEngine.UI; // For UI components
+using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ResolutionManager : MonoBehaviour
 {
@@ -13,30 +13,22 @@ public class ResolutionManager : MonoBehaviour
 
     public bool isResolutionActive = false;
 
-    public TextMeshProUGUI resolutionText; // "Choose the culprit" text
-    public TextMeshProUGUI finalText; // Final NPC selection text
-    public GameObject darkPanel; // The dark panel
-    public GameObject uiToHide; // Specific UI element to hide
+    public TextMeshProUGUI resolutionText;
+    public TextMeshProUGUI finalText;
+    public GameObject darkPanel;
+    public GameObject uiToHide;
     public float delayBeforePause = 1f;
-
-    private MusicManager musicManager;
 
     void Start()
     {
-        
-        musicManager = FindObjectOfType<MusicManager>();
         playerMovement = FindObjectOfType<MovementScript>();
 
-        // Hide all UI elements at the start
         darkPanel.SetActive(false);
         resolutionText.gameObject.SetActive(false);
         finalText.gameObject.SetActive(false);
 
         if (uiToHide != null)
-        {
-            uiToHide.SetActive(true); // Ensure the UI element is visible at the start
-        }
-
+            uiToHide.SetActive(true);
     }
 
     void Update()
@@ -61,20 +53,14 @@ public class ResolutionManager : MonoBehaviour
     {
         isResolutionActive = true;
 
-        // Hide specific UI element
         if (uiToHide != null)
-        {
-            uiToHide.SetActive(false); // Hide the UI element when entering resolution phase
-        }
+            uiToHide.SetActive(false);
 
         playerMovement.isResolutionActive = true;
 
-        if (musicManager != null && musicManager.resolutionMusic != null)
-        {
-            musicManager.ChangeMusic(musicManager.resolutionMusic, 2f);
-        }
+        // 💡 Smooth music transition
+        MusicManager.Instance?.PlaySuspenseMusic();
 
-        // Show "Choose the culprit" message but do not display the panel yet
         StartCoroutine(ShowInitialResolutionText());
     }
 
@@ -83,39 +69,28 @@ public class ResolutionManager : MonoBehaviour
         resolutionText.gameObject.SetActive(true);
 
         yield return StartCoroutine(AnimateText("Choose the culprit...", resolutionText, 50f));
-
-        // Keep the "Choose the culprit" text visible while waiting for player input
     }
 
     public void EndResolution(NPC selectedNPC)
     {
+        MusicManager.Instance?.PlayResolutionMusic();
         StartCoroutine(PauseAndDisplayPanel(selectedNPC));
     }
 
     private IEnumerator PauseAndDisplayPanel(NPC selectedNPC)
     {
-        // Hide the "Choose the culprit" text
         resolutionText.gameObject.SetActive(false);
-
-        // Add a slight delay before showing the panel
         yield return new WaitForSeconds(delayBeforePause);
 
-        // Show the panel, final text, and reset button
         darkPanel.SetActive(true);
         finalText.gameObject.SetActive(true);
-
-        // Ensure the text starts empty
         finalText.text = "";
 
-        // Get the resolution message and animate it
         string message = GetResolutionMessage(selectedNPC);
         yield return StartCoroutine(AnimateText(message, finalText));
 
-        // Unlock the cursor for interaction
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        // Pause the game
         Time.timeScale = 0f;
     }
 
@@ -139,7 +114,6 @@ public class ResolutionManager : MonoBehaviour
 
     private IEnumerator AnimateText(string message, TextMeshProUGUI targetText, float speed = 50f)
     {
-        // Ensure the text starts empty
         targetText.text = "";
 
         foreach (char c in message)
@@ -148,6 +122,4 @@ public class ResolutionManager : MonoBehaviour
             yield return new WaitForSeconds(1f / speed);
         }
     }
-
-
 }

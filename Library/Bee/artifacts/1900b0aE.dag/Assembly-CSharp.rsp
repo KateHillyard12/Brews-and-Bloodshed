@@ -101,6 +101,7 @@
 -define:NETSTANDARD
 -define:NETSTANDARD2_1
 -define:ENABLE_PROFILER
+-define:UNITY_SERVER
 -define:DEBUG
 -define:TRACE
 -define:UNITY_ASSERTIONS
@@ -383,6 +384,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
+"Assets/Audio/MusicManager.cs"
 "Assets/Scripts/AIScripts/ChatBubble.cs"
 "Assets/Scripts/AIScripts/NPC.cs"
 "Assets/Scripts/AIScripts/NPCIdleController.cs"
@@ -400,7 +402,6 @@
 "Assets/Scripts/MachineScripts/MachineType.cs"
 "Assets/Scripts/MachineScripts/MachineTypeDisplay.cs"
 "Assets/Scripts/MachineScripts/PourEffectController.cs"
-"Assets/Scripts/MusicManager.cs"
 "Assets/Scripts/PauseMenu.cs"
 "Assets/Scripts/PlayerScripts/MovementScript.cs"
 "Assets/Scripts/PlayerScripts/PlayerPickUpDrop.cs"

@@ -38,20 +38,31 @@ public class ObjectGrabbable : MonoBehaviour
         }
     }
 
+    public bool IsBeingHeld()
+    {
+        return objectGrabPointTransform != null;
+    }
+
+
     public void Drop()
     {
         objectGrabPointTransform = null;
         objectRigidbody.useGravity = true;
+
+        if (CompareTag("IgnoreSnap"))
+        {
+            currentSnapPoint = null;
+        }
 
         if (currentSnapPoint != null)
         {
             SnapToPoint();
         }
 
-        // Notify the MugSnapper if attached
         MugSnapper mugSnapper = GetComponent<MugSnapper>();
         mugSnapper?.DropMug();
     }
+
 
     private void FixedUpdate()
     {
@@ -64,12 +75,15 @@ public class ObjectGrabbable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (CompareTag("IgnoreSnap")) return;
+
         SnapPoint snapPoint = other.GetComponent<SnapPoint>();
         if (snapPoint != null && !snapPoint.isOccupied)
         {
             currentSnapPoint = snapPoint;
         }
     }
+
 
     private void OnTriggerExit(Collider other)
     {
@@ -132,5 +146,6 @@ public class ObjectGrabbable : MonoBehaviour
         isSnapping = false;
         canPickUp = true;
     }
+
 
 }
