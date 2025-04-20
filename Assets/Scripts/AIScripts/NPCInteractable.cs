@@ -99,6 +99,8 @@ public class NPCInteractable : MonoBehaviour
         lastResponse = isOrderCorrect ? correctResponse : incorrectResponse;
 
         ChatBubble.Create(canvasTransform, lastResponse, textPrefab, mainCamera, transform);
+        PlayInteractionSound();
+
         HasReceivedMug = true;
 
         Debug.Log("Calling SwitchToMugPose...");

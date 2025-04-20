@@ -7,12 +7,14 @@ public class SnapPoint : MonoBehaviour
     public bool isOccupied = false;
     public MachineType machineType;
 
-
     [SerializeField] private AudioSource boopSound;
     private GameObject lastBoopedObject = null;
     private float boopCooldown = 2f;
     private float boopTimer = 2f;
 
+    [SerializeField] private AudioSource machineAudioSource;
+    [SerializeField] private AudioClip machineClip;
+    [SerializeField] private bool loopAudio = false;
 
     private void Update()
     {
@@ -51,18 +53,24 @@ public class SnapPoint : MonoBehaviour
 
         if (CompareTag("Machine"))
         {
-            Debug.Log("Snapped to machine. Mug is ready for processing.");
+            if (machineAudioSource != null && machineClip != null)
+            {
+                machineAudioSource.clip = machineClip;
+                machineAudioSource.loop = loopAudio;
+                Debug.Log("sounds yippeeeee");
+                Debug.Log($"AudioSource: {machineAudioSource}, Clip: {machineAudioSource.clip}, Volume: {machineAudioSource.volume}");
+
+                machineAudioSource.Play();
+            }
         }
         else if (CompareTag("NPC"))
         {
-            Debug.Log("Snapped to NPC. Mug is now held.");
             mugTransform.parent = transform;
 
             NPCInteractable npc = GetComponentInParent<NPCInteractable>();
             if (npc != null)
             {
                 npc.ReceiveMug(mugTransform.gameObject);
-                Debug.Log($"{npc.name} received a mug.");
             }
         }
     }
@@ -117,12 +125,9 @@ public class SnapPoint : MonoBehaviour
         }
     }
 
-
     private bool IsBeingHeld(GameObject obj)
     {
         var grabbable = obj.GetComponent<ObjectGrabbable>();
         return grabbable != null && grabbable.IsBeingHeld();
     }
-
-
 }

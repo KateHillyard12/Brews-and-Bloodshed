@@ -12,9 +12,6 @@ public class MugSnapper : MonoBehaviour
     [SerializeField] private VisualEffect steamVFX;
 
 
-
-    [SerializeField] private AudioSource coffeeMachineAudioSource;
-
     private void Awake()
     {
         ingredientColors = new Dictionary<MachineType, Color>
@@ -71,11 +68,6 @@ public class MugSnapper : MonoBehaviour
                 {
                     AddIngredient(currentSnapPoint.machineType.ToString(), ingredientColor);
 
-                    // Play sound if it's a coffee machine
-                    if (currentSnapPoint.machineType == MachineType.Coffee && coffeeMachineAudioSource != null)
-                    {
-                        coffeeMachineAudioSource.Play();
-                    }
                 }
             }
             else if (currentSnapPoint.CompareTag("NPC"))

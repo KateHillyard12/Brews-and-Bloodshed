@@ -34,9 +34,20 @@ public class ChatBubble : MonoBehaviour
     {
         if (npcTransform != null && mainCamera != null)
         {
-            // Continuously update the position to track the NPC's position
-            Vector3 screenPosition = mainCamera.WorldToScreenPoint(npcTransform.position + new Vector3(0, 2, 0));  // Offset above NPC
-            rectTransform.position = screenPosition;
+            Vector3 worldOffset = npcTransform.position + new Vector3(0, 2, 0);
+            Vector3 screenPosition = mainCamera.WorldToScreenPoint(worldOffset);
+
+            // Only show if the NPC is in front of the camera
+            if (screenPosition.z > 0)
+            {
+                rectTransform.position = screenPosition;
+                rectTransform.gameObject.SetActive(true);
+            }
+            else
+            {
+                rectTransform.gameObject.SetActive(false);
+            }
         }
     }
+
 }
