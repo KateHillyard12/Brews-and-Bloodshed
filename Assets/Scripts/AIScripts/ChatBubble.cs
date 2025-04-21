@@ -27,7 +27,7 @@ public class ChatBubble : MonoBehaviour
         chatText.text = text;
 
         // Destroy after a set duration (e.g., 2 seconds)
-        Destroy(chatBubbleText, 2f);
+        Destroy(chatBubbleText, 4f);
     }
 
     private void Update()

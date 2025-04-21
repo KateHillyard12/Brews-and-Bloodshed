@@ -96,21 +96,38 @@ public class ResolutionManager : MonoBehaviour
 
     private string GetResolutionMessage(NPC selectedNPC)
     {
-        if (selectedNPC.name == "Stacy")
+        string murderer = MurderManager.Instance != null ? MurderManager.Instance.murdererName : "Dave";
+        bool guessedCorrectly = selectedNPC.name == murderer;
+
+        if (guessedCorrectly)
         {
-            return "You've chosen Stacy as the suspect. She appears visibly nervous. You reported to the police, convinced Stacy was the one responsible. However, when the case went to court, the judge declared her not guilty. As a result, the police revoked your barista license, leaving you penniless and stranded on the streets.";
+            switch (selectedNPC.name)
+            {
+                case "Stacy":
+                    return "You accuse Stacy. Her confident facade crumbles. She breaks down, confessing to the crime in tears. Justice is served.";
+                case "Mark":
+                    return "Mark stares at you coldly. After a tense silence, he admits everything. The case is closed — you got the right guy.";
+                case "Dave":
+                    return "Dave's cheerful demeanor shifts instantly. The police cuff him on the spot. Turns out the bubbly boy was hiding a dark secret.";
+            }
         }
-        else if (selectedNPC.name == "Mark")
+        else
         {
-            return "Mark appears impatient, his eyes fixed on you with a tense gaze. After you reported him to the police, he was sentenced to death. However, just days after the execution, another murder occurred, revealing the tragic mistake—an innocent man had been executed.";
-        }
-        else if (selectedNPC.name == "Dave")
-        {
-            return "Dave offers a warm smile, appearing completely relaxed. You share your suspicions with the police, and after a thorough investigation, Dave pleads guilty. Your café becomes renowned as the 'Murder Mystery Café,' attracting millions and turning you into a wealthy entrepreneur.";
+            switch (selectedNPC.name)
+            {
+                case "Stacy":
+                    return "You accuse Stacy, but she’s stunned. No evidence links her to the crime. Meanwhile, the real killer roams free.";
+                case "Mark":
+                    return "Mark is furious at your accusation. With no proof, the case collapses, and your reputation is ruined.";
+                case "Dave":
+                    return "You point the finger at Dave. He laughs nervously, but it’s clear he’s innocent. The real murderer slips away in the chaos.";
+            }
         }
 
-        return "Unknown NPC selected.";
+        return "Something went wrong with the resolution...";
     }
+
+
 
     private IEnumerator AnimateText(string message, TextMeshProUGUI targetText, float speed = 50f)
     {

@@ -35,25 +35,148 @@ public class NPCInteractable : MonoBehaviour
 
         // Set default responses and orders based on the NPC's tag
         switch (gameObject.tag)
+{
+        case "Stacy":
         {
-            case "Stacy":
-                desiredIngredients = new List<string> { "Coffee" };
-                correctResponse = "Thanks! Just how I like it. I heard the murder likes milk.";
-                incorrectResponse = "That's not what I ordered! Oh well...";
-                interactTexts = new string[] { "It's a lovely day!", "Have you heard about the murder down the street?", "My bestie told me the murder attends this cafe often.", "Anyways, could I get a regular black coffee please?" };
-                break;
-            case "Mark":
-                desiredIngredients = new List<string> { "Coffee", "Milk" };
-                correctResponse = "Finally, my coffee with milk. I bet that murder is pretty happy to get away.";
-                incorrectResponse = "Ugh, this isn't right.";
-                interactTexts = new string[] { "Hey", "Could I get a coffee with milk?", "Make it quick, I don’t have a lot of patience." };
-                break;
-            case "Dave":
-                desiredIngredients = new List<string> { "Coffee", "Milk", "CSyrup" }; // Caramel syrup
-                correctResponse = "Perfect! Thank you. Im just so happy!";
-                incorrectResponse = "I asked for caramel syrup!";
-                interactTexts = new string[] { "This place is adorable!", "I'll have a coffee with milk and caramel syrup pretty please!" };
-                break;
+            var possibleOrders = new List<List<string>> {
+                new List<string> { "Coffee" },
+                new List<string> { "Coffee", "Milk" },
+                new List<string> { "Coffee", "VSyrup" },
+                new List<string> { "Coffee", "CHSyrup"},
+                new List<string> { "Coffee", "Milk", "CSyrup" }
+            };
+            desiredIngredients = possibleOrders[Random.Range(0, possibleOrders.Count)];
+            string orderText = string.Join(", ", desiredIngredients.ConvertAll(FormatIngredientName));
+
+            incorrectResponse = new string[] {
+                "That's not what I ordered! Oh well...",
+                "Ew, this isn't right.",
+                "Hmm... did you mix up the drinks?",
+                "I don’t think this is mine, but okay."
+            }[Random.Range(0, 4)];
+
+            if (MurderManager.Instance != null)
+            {
+                string murderer = MurderManager.Instance.murdererName;
+                if (murderer == "Dave")
+                    correctResponse = $"Thanks! Just how I like it. That guy is looking over his shoulder a lot. Weird.";
+                else if (murderer == "Mark")
+                    correctResponse = $"Thank you, this is perfect. I heard the murderer is kinda rough looking.";
+                else
+                    correctResponse = $"Hmm... you're sweet, I bet the murder wuld like you for this coffee!";
+
+                interactTexts = new string[] {
+                    "It's a lovely day!",
+                    "Have you heard about the murder down the street?",
+                    $"My bestie told me the murderer attends this cafe",
+                    $"Anyways, could I get a {orderText} please?"
+                };
+            }
+            else
+            {
+                correctResponse = $"Thanks! Just how I like it — {orderText}.";
+                interactTexts = new string[] {
+                    "It's a lovely day!",
+                    "Have you heard about the murder down the street?",
+                    "My bestie told me the murderer attends this cafe...",
+                    $"Anyways, could I get a {orderText} please?"
+                };
+            }
+            break;
+        }
+
+        case "Mark":
+        {
+            var possibleOrders = new List<List<string>> {
+                new List<string> { "Coffee", "Milk" },
+                new List<string> { "Coffee", "Milk", "VSyrup" },
+                new List<string> { "Coffee", "CHSyrup" },
+                new List<string> { "Coffee" }
+            };
+            desiredIngredients = possibleOrders[Random.Range(0, possibleOrders.Count)];
+            string orderText = string.Join(", ", desiredIngredients.ConvertAll(FormatIngredientName));
+
+            incorrectResponse = new string[] {
+                "What is this? Definitely not what I asked for.",
+                "This isn't my order. Whatever...",
+                "Wrong again. Ugh.",
+                "I didn’t ask for this..."
+            }[Random.Range(0, 4)];
+
+            if (MurderManager.Instance != null)
+            {
+                string murderer = MurderManager.Instance.murdererName;
+                if (murderer == "Stacy")
+                    correctResponse = $"This hits the spot. This chic next to me seems kinda nervous.";
+                else if (murderer == "Dave")
+                    correctResponse = $"Nice. I wouldn't trust anyone who seems too happy, ya know.";
+                else
+                    correctResponse = $"Yeah, this’ll do.";
+
+                interactTexts = new string[] {
+                    "Hey.",
+                    $"Let me get a {orderText}.",
+                    "You know, I saw someone shady outside.",
+                    $"Make it quick, I don’t have a lot of patience."
+                };
+            }
+            else
+            {
+                correctResponse = $"Nice, this {orderText} will do.";
+                interactTexts = new string[] {
+                    "Hey.",
+                    $"Let me get a {orderText}.",
+                    "Make it quick, I don’t have a lot of patience."
+                };
+            }
+            break;
+        }
+
+        case "Dave":
+        {
+            var possibleOrders = new List<List<string>> {
+                new List<string> { "Coffee", "Milk", "CSyrup" },
+                new List<string> { "Coffee", "CSyrup" },
+                new List<string> { "Coffee", "Milk" },
+                new List<string> { "Coffee" }
+            };
+            desiredIngredients = possibleOrders[Random.Range(0, possibleOrders.Count)];
+            string orderText = string.Join(", ", desiredIngredients.ConvertAll(FormatIngredientName));
+
+            incorrectResponse = new string[] {
+                "I asked for something else!",
+                "This isn't what I expected...",
+                "Aw man, wrong drink.",
+                "Hmm, not quite right."
+            }[Random.Range(0, 4)];
+
+            if (MurderManager.Instance != null)
+            {
+                string murderer = MurderManager.Instance.murdererName;
+                if (murderer == "Stacy")
+                    correctResponse = $"Perfect! Did you hear that lady's best friend got killed?";
+                else if (murderer == "Mark")
+                    correctResponse = $"Mmm. If I was a murder I would be in rush to flee the country.";
+                else
+                    correctResponse = $"You made this? Well done. Watch your back though...";
+
+                interactTexts = new string[] {
+                    "This place is adorable!",
+                    $"I'd like a {orderText}, pretty please!",
+                    $"Hope the murderer doesn’t like {orderText} too…"
+                };
+            }
+            else
+            {
+                correctResponse = $"Perfect! This {orderText} is just what I wanted.";
+                interactTexts = new string[] {
+                    "This place is adorable!",
+                    $"I'd like a {orderText}, please!"
+                };
+            }
+            break;
+        }
+
         }
         
         idleController = GetComponentInParent<NPCIdleController>();
@@ -166,7 +289,7 @@ public class NPCInteractable : MonoBehaviour
         {
             ChatBubble.Create(canvasTransform, text, textPrefab, mainCamera, transform);
             PlayInteractionSound();
-            yield return new WaitForSeconds(3f); // Wait before showing the next text
+            yield return new WaitForSeconds(4.5f); // Wait before showing the next text
         }
         isDisplayingText = false; // Reset flag after dialogue ends
     }
@@ -178,4 +301,16 @@ public class NPCInteractable : MonoBehaviour
             audioSource.Play();
         }
     }
+
+    private string FormatIngredientName(string rawName)
+    {
+        switch (rawName)
+        {
+            case "CSyrup": return "caramel syrup";
+            case "VSyrup": return "vanilla syrup";
+            case "CHSyrup": return "chocolate syrup"; // if you use this tag
+            default: return rawName.ToLower();
+        }
+    }
+
 }

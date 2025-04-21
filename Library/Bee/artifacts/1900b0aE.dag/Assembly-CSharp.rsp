@@ -386,6 +386,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Audio/MusicManager.cs"
 "Assets/Scripts/AIScripts/ChatBubble.cs"
+"Assets/Scripts/AIScripts/MurderManager.cs"
 "Assets/Scripts/AIScripts/NPC.cs"
 "Assets/Scripts/AIScripts/NPCIdleController.cs"
 "Assets/Scripts/AIScripts/NPCInteractable.cs"

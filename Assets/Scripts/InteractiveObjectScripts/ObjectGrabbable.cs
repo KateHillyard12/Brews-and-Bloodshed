@@ -10,6 +10,8 @@ public class ObjectGrabbable : MonoBehaviour
     private bool canPickUp = true;
 
     private SnapPoint currentSnapPoint;
+    private SnapPoint lastSnapPointBeforeCooldown;
+
 
     // UI elements
     [SerializeField] private Slider cooldownSlider;
@@ -101,12 +103,13 @@ public class ObjectGrabbable : MonoBehaviour
         {
             currentSnapPoint.SnapToPoint(transform);
             isSnapping = true;
-
             if (currentSnapPoint.CompareTag("Machine"))
             {
-                objectRigidbody.isKinematic = true; // Stop movement
+                objectRigidbody.isKinematic = true;
+
                 StartCoroutine(PickUpCooldown());
             }
+
             else if (currentSnapPoint.CompareTag("NPC"))
             {
                 objectRigidbody.isKinematic = true; // Mug is held
@@ -117,6 +120,8 @@ public class ObjectGrabbable : MonoBehaviour
 
     private IEnumerator PickUpCooldown()
     {
+        lastSnapPointBeforeCooldown = currentSnapPoint;
+
         canPickUp = false;
         cooldownUI?.SetActive(true);
         cooldownSlider.value = 0;
@@ -127,11 +132,17 @@ public class ObjectGrabbable : MonoBehaviour
             cooldownSlider.value = t / cooldownTime;
             yield return null;
         }
-        // Ensure state is reset after cooldown
-        if (currentSnapPoint != null)
+
+        if (currentSnapPoint != null && currentSnapPoint.CompareTag("Machine"))
         {
-            currentSnapPoint.Release();
+            if (currentSnapPoint.isOccupied && currentSnapPoint == lastSnapPointBeforeCooldown)
+            {
+                currentSnapPoint.Release();
+            }
         }
+
+
+
 
         canPickUp = true;
         isSnapping = false;
