@@ -15,19 +15,17 @@ public class StartScreenController : MonoBehaviour
 
     void Start()
     {
-        // Hook up video finished event
-        videoPlayer.loopPointReached += OnVideoFinished;
-
-        // Hook up prepare completed event
+        // Prepare and start video playback
         videoPlayer.prepareCompleted += OnVideoPrepared;
-
-        // Prepare the video (preload)
         videoPlayer.Prepare();
 
         // Get the input action
         anyInputAction = inputActions.FindAction("anyInput");
         anyInputAction.performed += OnAnyInput;
         anyInputAction.Enable();
+
+        // Start coroutine to allow input after 13 seconds
+        StartCoroutine(AllowInputAfterDelay(13f));
     }
 
     private void OnVideoPrepared(VideoPlayer vp)
@@ -36,12 +34,13 @@ public class StartScreenController : MonoBehaviour
         videoPlayer.Play();
     }
 
-
-    private void OnVideoFinished(VideoPlayer vp)
+    private IEnumerator AllowInputAfterDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
         inputAllowed = true;
-        Debug.Log("Video finished! Waiting for player input...");
+        Debug.Log("13 seconds passed! Waiting for player input...");
     }
+
 
     private void OnAnyInput(InputAction.CallbackContext context)
     {
